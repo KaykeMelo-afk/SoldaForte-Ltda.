@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <title>Controle de EPI - SoldaForte (CRUD Local)</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    :root{
+      --blue:#007bff; --green:#28a745; --yellow:#ffc107; --red:#dc3545;
+      --muted:#6c757d; --bg:#f8f9fa;
+    }
+    body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);margin:0;padding:20px}
+    header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+    h1{margin:0;color:#223}
+    .controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+    button{padding:8px 10px;border-radius:6px;border:1px solid rgba(0,0,0,0.08);background:white;cursor:pointer}
+    button.primary{background:var(--blue);color:white;border:none}
+    button.danger{background:var(--red);color:white;border:none}
+    input[type=text],select,input[type=date],input[type=number]{padding:8px;border-radius:6px;border:1px solid #ccc}
+    table{width:100%;border-collapse:collapse;margin-top:12px;background:white;box-shadow:0 1px 2px rgba(0,0,0,0.03)}
+    th,td{padding:10px;border-bottom:1px solid #eee;text-align:left;font-size:14px}
+    th{background:var(--blue);color:white;position:sticky;top:0}
+    tr:nth-child(even){background:#fdfdfd}
+    .badge{display:inline-block;padding:4px 8px;border-radius:999px;font-size:12px}
+    .badge.green{background:var(--green);color:white}
+    .badge.yellow{background:var(--yellow);color:#222}
+    .badge.red{background:var(--red);color:white}
+    .small{font-size:12px;color:var(--muted)}
+    /* form modal */
+    .modal{position:fixed;left:0;top:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,0.45)}
+    .modal.open{display:flex}
+    .card{background:white;padding:16px;border-radius:8px;min-width:320px;max-width:920px;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
+    .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+    .full{grid-column:1/-1}
+    .actions{display:flex;gap:8px;justify-content:flex-end;margin-top:10px}
+    .icon{width:18px;height:18px;display:inline-block;vertical-align:middle}
+    footer{margin-top:18px;color:var(--muted);font-size:13px}
+    @media(max-width:720px){.grid{grid-template-columns:1fr}.controls{flex-direction:column;align-items:flex-start}}
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Controle de EPI — SoldaForte Ltda.</h1>
+    <div class="controls">
+      <input id="searchInput" type="text" placeholder="Pesquisar (nome, EPI, cargo)..." />
+      <select id="filterEPI"><option value="">Filtrar por EPI</option></select>
+      <select id="filterCargo"><option value="">Filtrar por Cargo</option></select>
+      <select id="filterSituacao">
+        <option value="">Filtrar por Situação</option>
+        <option value="Dentro do prazo">Dentro do prazo</option>
+        <option value="Vencido">Vencido</option>
+      </select>
+      <button id="btnAdd" class="primary">➕ Novo registro</button>
+      <button id="btnExport">📤 Exportar CSV</button>
+      <button id="btnReset">♻️ Resetar dados</button>
+    </div>
+  </header>
+
+  <main>
+    <table id="tableEPI">
+      <thead>
+        <tr>
+          <th>ID</th><th>Funcionário</th><th>Cargo</th><th>EPI</th><th>Data Fornecida</th><th>Próxima Troca</th><th>Situação</th><th>Alerta</th><th class="small">Ações</th>
+        </tr>
+      </thead>
+      <tbody></tbody>
+    </table>
+    <footer>Dados armazenados localmente no seu navegador (localStorage). Para resetar, use "Resetar dados".</footer>
+  </main>
+
+  <!-- Modal Form -->
+  <div id="modal" class="modal" role="dialog" aria-hidden="true">
+    <div class="card" role="document">
+      <h3 id="formTitle">Novo registro</h3>
+      <form id="formEPI">
+        <div class="grid">
+          <div><label>Funcionário<br/><input id="inputFuncionario" type="text" required></label></div>
+          <div><label>Cargo<br/><input id="inputCargo" type="text" required></label></div>
+          <div><label>EPI<br/><input id="inputEPI" type="text" required></label></div>
+          <div><label>Data Fornecida<br/><input id="inputDataFor" type="date" required></label></div>
+          <div><label>Validade (dias)<br/><input id="inputValidade" type="number" min="1" required></label></div>
+          <div><label>Quantidade<br/><input id="inputQuantidade" type="number" min="1" required></label></div>
+          <div class="full"><label>Observações (opcional)<br/><input id="inputObs" type="text"></label></div>
+        </div>
+        <div class="actions">
+          <button type="button" id="btnCancel">Cancelar</button>
+          <button type="submit" class="primary" id="btnSave">Salvar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+<script>
+/* =========================
+   Inicial: 40 registros (gerados previamente)
+   - Ao abrir pela primeira vez, gravamos esses registros em localStorage.
+   - Depois, todas alterações ficam no localStorage (persistente).
+   ========================= */
+
+const initialData = [
+  {"id":1,"Empresa":"SoldaForte Ltda.","Funcionario":"João Silva","Cargo":"Soldador","EPI":"Máscara de solda","Data Fornecida":"2025-08-01","Validade (dias)":180,"Proxima Troca":"2026-01-28","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":2,"Empresa":"SoldaForte Ltda.","Funcionario":"João Silva","Cargo":"Soldador","EPI":"Luvas de raspa","Data Fornecida":"2025-06-12","Validade (dias)":90,"Proxima Troca":"2025-09-10","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":3,"Empresa":"SoldaForte Ltda.","Funcionario":"João Silva","Cargo":"Soldador","EPI":"Avental de couro","Data Fornecida":"2025-07-20","Validade (dias)":180,"Proxima Troca":"2026-01-16","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":4,"Empresa":"SoldaForte Ltda.","Funcionario":"João Silva","Cargo":"Soldador","EPI":"Protetor auricular","Data Fornecida":"2025-09-15","Validade (dias)":90,"Proxima Troca":"2025-12-14","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":5,"Empresa":"SoldaForte Ltda.","Funcionario":"Maria Oliveira","Cargo":"Técnica de Qualidade","EPI":"Óculos de proteção","Data Fornecida":"2025-02-10","Validade (dias)":180,"Proxima Troca":"2025-08-09","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":6,"Empresa":"SoldaForte Ltda.","Funcionario":"Maria Oliveira","Cargo":"Técnica de Qualidade","EPI":"Luvas de segurança","Data Fornecida":"2025-07-01","Validade (dias)":90,"Proxima Troca":"2025-09-29","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":7,"Empresa":"SoldaForte Ltda.","Funcionario":"Maria Oliveira","Cargo":"Técnica de Qualidade","EPI":"Protetor auricular","Data Fornecida":"2025-10-10","Validade (dias)":90,"Proxima Troca":"2026-01-08","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":8,"Empresa":"SoldaForte Ltda.","Funcionario":"Maria Oliveira","Cargo":"Técnica de Qualidade","EPI":"Botina de segurança","Data Fornecida":"2025-04-05","Validade (dias)":365,"Proxima Troca":"2026-04-05","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":9,"Empresa":"SoldaForte Ltda.","Funcionario":"Carlos Pereira","Cargo":"Engenheiro de Processos","EPI":"Capacete","Data Fornecida":"2025-01-20","Validade (dias)":730,"Proxima Troca":"2027-01-20","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":10,"Empresa":"SoldaForte Ltda.","Funcionario":"Carlos Pereira","Cargo":"Engenheiro de Processos","EPI":"Óculos de proteção","Data Fornecida":"2025-03-12","Validade (dias)":180,"Proxima Troca":"2025-09-08","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":11,"Empresa":"SoldaForte Ltda.","Funcionario":"Carlos Pereira","Cargo":"Engenheiro de Processos","EPI":"Botina de segurança","Data Fornecida":"2024-11-15","Validade (dias)":365,"Proxima Troca":"2025-11-15","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":12,"Empresa":"SoldaForte Ltda.","Funcionario":"Carlos Pereira","Cargo":"Engenheiro de Processos","EPI":"Protetor auricular","Data Fornecida":"2025-06-02","Validade (dias)":90,"Proxima Troca":"2025-08-31","Situacao":"Vencido","Alerta":"❌ Vencido"},
+
+  {"id":13,"Empresa":"SoldaForte Ltda.","Funcionario":"Ana Santos","Cargo":"Soldadora","EPI":"Máscara de solda","Data Fornecida":"2025-05-22","Validade (dias)":180,"Proxima Troca":"2025-11-18","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":14,"Empresa":"SoldaForte Ltda.","Funcionario":"Ana Santos","Cargo":"Soldadora","EPI":"Avental de couro","Data Fornecida":"2025-04-08","Validade (dias)":180,"Proxima Troca":"2025-10-05","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":15,"Empresa":"SoldaForte Ltda.","Funcionario":"Ana Santos","Cargo":"Soldadora","EPI":"Luvas de raspa","Data Fornecida":"2025-09-10","Validade (dias)":90,"Proxima Troca":"2025-12-09","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":16,"Empresa":"SoldaForte Ltda.","Funcionario":"Ana Santos","Cargo":"Soldadora","EPI":"Protetor auricular","Data Fornecida":"2025-10-05","Validade (dias)":90,"Proxima Troca":"2026-01-03","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":17,"Empresa":"SoldaForte Ltda.","Funcionario":"Pedro Costa","Cargo":"Auxiliar de Soldagem","EPI":"Óculos de proteção","Data Fornecida":"2025-08-14","Validade (dias)":180,"Proxima Troca":"2026-02-10","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":18,"Empresa":"SoldaForte Ltda.","Funcionario":"Pedro Costa","Cargo":"Auxiliar de Soldagem","EPI":"Luvas de segurança","Data Fornecida":"2025-09-30","Validade (dias)":90,"Proxima Troca":"2025-12-29","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":19,"Empresa":"SoldaForte Ltda.","Funcionario":"Pedro Costa","Cargo":"Auxiliar de Soldagem","EPI":"Protetor auricular","Data Fornecida":"2025-07-10","Validade (dias)":90,"Proxima Troca":"2025-10-08","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":20,"Empresa":"SoldaForte Ltda.","Funcionario":"Pedro Costa","Cargo":"Auxiliar de Soldagem","EPI":"Botina de segurança","Data Fornecida":"2025-02-22","Validade (dias)":365,"Proxima Troca":"2026-02-21","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":21,"Empresa":"SoldaForte Ltda.","Funcionario":"Fernanda Lima","Cargo":"Coordenadora de Produção","EPI":"Capacete","Data Fornecida":"2024-12-01","Validade (dias)":730,"Proxima Troca":"2026-11-30","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":22,"Empresa":"SoldaForte Ltda.","Funcionario":"Fernanda Lima","Cargo":"Coordenadora de Produção","EPI":"Botina de segurança","Data Fornecida":"2025-04-12","Validade (dias)":365,"Proxima Troca":"2026-04-12","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":23,"Empresa":"SoldaForte Ltda.","Funcionario":"Fernanda Lima","Cargo":"Coordenadora de Produção","EPI":"Luvas de segurança","Data Fornecida":"2025-06-08","Validade (dias)":90,"Proxima Troca":"2025-09-06","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":24,"Empresa":"SoldaForte Ltda.","Funcionario":"Fernanda Lima","Cargo":"Coordenadora de Produção","EPI":"Óculos de proteção","Data Fornecida":"2025-03-10","Validade (dias)":180,"Proxima Troca":"2025-09-06","Situacao":"Vencido","Alerta":"❌ Vencido"},
+
+  {"id":25,"Empresa":"SoldaForte Ltda.","Funcionario":"Ricardo Almeida","Cargo":"Soldador","EPI":"Máscara de solda","Data Fornecida":"2025-07-14","Validade (dias)":180,"Proxima Troca":"2026-01-10","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":26,"Empresa":"SoldaForte Ltda.","Funcionario":"Ricardo Almeida","Cargo":"Soldador","EPI":"Luvas de raspa","Data Fornecida":"2025-05-02","Validade (dias)":90,"Proxima Troca":"2025-07-31","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":27,"Empresa":"SoldaForte Ltda.","Funcionario":"Ricardo Almeida","Cargo":"Soldador","EPI":"Avental de couro","Data Fornecida":"2025-10-02","Validade (dias)":180,"Proxima Troca":"2026-03-31","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":28,"Empresa":"SoldaForte Ltda.","Funcionario":"Ricardo Almeida","Cargo":"Soldador","EPI":"Protetor auricular","Data Fornecida":"2025-09-01","Validade (dias)":90,"Proxima Troca":"2025-11-30","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":29,"Empresa":"SoldaForte Ltda.","Funcionario":"Juliana Martins","Cargo":"Assistente Administrativa","EPI":"Luvas de segurança","Data Fornecida":"2025-09-22","Validade (dias)":90,"Proxima Troca":"2025-12-21","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":30,"Empresa":"SoldaForte Ltda.","Funcionario":"Juliana Martins","Cargo":"Assistente Administrativa","EPI":"Calçado fechado","Data Fornecida":"2024-11-10","Validade (dias)":365,"Proxima Troca":"2025-11-10","Situacao":"Vencido","Alerta":"❌ Vencido"},
+
+  {"id":31,"Empresa":"SoldaForte Ltda.","Funcionario":"Lucas Ferreira","Cargo":"Técnico de Manutenção","EPI":"Capacete","Data Fornecida":"2025-02-02","Validade (dias)":730,"Proxima Troca":"2027-02-02","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":32,"Empresa":"SoldaForte Ltda.","Funcionario":"Lucas Ferreira","Cargo":"Técnico de Manutenção","EPI":"Óculos de proteção","Data Fornecida":"2025-08-05","Validade (dias)":180,"Proxima Troca":"2026-02-01","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":33,"Empresa":"SoldaForte Ltda.","Funcionario":"Lucas Ferreira","Cargo":"Técnico de Manutenção","EPI":"Luvas de segurança","Data Fornecida":"2025-09-12","Validade (dias)":90,"Proxima Troca":"2025-12-11","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":34,"Empresa":"SoldaForte Ltda.","Funcionario":"Lucas Ferreira","Cargo":"Técnico de Manutenção","EPI":"Botina de segurança","Data Fornecida":"2025-03-20","Validade (dias)":365,"Proxima Troca":"2026-03-20","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":35,"Empresa":"SoldaForte Ltda.","Funcionario":"Tatiane Rocha","Cargo":"Gerente de Vendas","EPI":"Calçado fechado","Data Fornecida":"2025-04-01","Validade (dias)":365,"Proxima Troca":"2026-04-01","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":36,"Empresa":"SoldaForte Ltda.","Funcionario":"Tatiane Rocha","Cargo":"Gerente de Vendas","EPI":"Luvas de segurança","Data Fornecida":"2025-10-12","Validade (dias)":90,"Proxima Troca":"2026-01-10","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+
+  {"id":37,"Empresa":"SoldaForte Ltda.","Funcionario":"Extra A","Cargo":"Auxiliar","EPI":"Luvas de segurança","Data Fornecida":"2025-06-10","Validade (dias)":90,"Proxima Troca":"2025-09-08","Situacao":"Vencido","Alerta":"❌ Vencido"},
+  {"id":38,"Empresa":"SoldaForte Ltda.","Funcionario":"Extra B","Cargo":"Auxiliar","EPI":"Calçado fechado","Data Fornecida":"2025-02-01","Validade (dias)":365,"Proxima Troca":"2026-02-01","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":39,"Empresa":"SoldaForte Ltda.","Funcionario":"Extra C","Cargo":"Auxiliar","EPI":"Protetor auricular","Data Fornecida":"2025-09-01","Validade (dias)":90,"Proxima Troca":"2025-11-30","Situacao":"Dentro do prazo","Alerta":"✅ Sem alerta"},
+  {"id":40,"Empresa":"SoldaForte Ltda.","Funcionario":"Extra D","Cargo":"Auxiliar","EPI":"Óculos de proteção","Data Fornecida":"2025-03-02","Validade (dias)":180,"Proxima Troca":"2025-08-29","Situacao":"Vencido","Alerta":"❌ Vencido"}
+];
+
+const STORAGE_KEY = "soldaforte_controle_epi_v1";
+
+/* Utility: parse date safely */
+function parseDate(str){
+  if(!str) return null;
+  const parts = str.split("-");
+  if(parts.length===3) return new Date(parts[0], parts[1]-1, parts[2]);
+  const d = new Date(str);
+  return isNaN(d) ? null : d;
+}
+
+/* Compute situacao & alerta using rule: <=15 dias -> warning; expired -> vencido */
+function computeStatus(proxTrocaStr){
+  const today = new Date();
+  const prox = parseDate(proxTrocaStr);
+  if(!prox) return {Situacao:"Desconhecido",Alerta:""};
+  const diffDays = Math.ceil((prox - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / (1000*60*60*24));
+  if(diffDays < 0) return {Situacao:"Vencido", Alerta:"❌ Vencido"};
+  if(diffDays <= 15) return {Situacao:"Dentro do prazo", Alerta:`⚠️ Troca em breve (${diffDays} dias restantes)`};
+  return {Situacao:"Dentro do prazo", Alerta:"✅ Sem alerta"};
+}
+
+/* Load from storage or initialize */
+function loadData(){
+  const raw = localStorage.getItem(STORAGE_KEY);
+  if(raw){
+    try{
+      const arr = JSON.parse(raw);
+      // re-evaluate status for current date
+      arr.forEach(r=>{
+        const status = computeStatus(r["Proxima Troca"]);
+        r.Situacao = status.Situacao;
+        r.Alerta = status.Alerta;
+      });
+      return arr;
+    }catch(e){
+      console.error("Erro parse localStorage:",e);
+      localStorage.removeItem(STORAGE_KEY);
+    }
+  }
+  // save initial data
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData, null, 2));
+  return initialData.slice();
+}
+
+/* Save */
+function saveData(arr){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(arr, null, 2));
+}
+
+/* Helpers for UI */
+const tbody = document.querySelector("#tableEPI tbody");
+const searchInput = document.getElementById("searchInput");
+const filterEPI = document.getElementById("filterEPI");
+const filterCargo = document.getElementById("filterCargo");
+const filterSituacao = document.getElementById("filterSituacao");
+
+let data = loadData();
+
+function uniqueValues(arr, key){
+  const s = new Set();
+  arr.forEach(x=>s.add(x[key]));
+  return [...s].sort();
+}
+
+function populateFilters(){
+  // EPI
+  filterEPI.innerHTML = "<option value=''>Filtrar por EPI</option>";
+  uniqueValues(data,"EPI").forEach(v=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=v; filterEPI.appendChild(o);
+  });
+  // Cargo
+  filterCargo.innerHTML = "<option value=''>Filtrar por Cargo</option>";
+  uniqueValues(data,"Cargo").forEach(v=>{
+    const o = document.createElement("option"); o.value=v; o.textContent=v; filterCargo.appendChild(o);
+  });
+}
+
+/* Render table with current filters/search */
+function renderTable(){
+  const q = (searchInput.value||"").toLowerCase();
+  const epiFilter = filterEPI.value;
+  const cargoFilter = filterCargo.value;
+  const sitFilter = filterSituacao.value;
+
+  tbody.innerHTML = "";
+  const fragment = document.createDocumentFragment();
+  data.filter(item=>{
+    if(epiFilter && item.EPI !== epiFilter) return false;
+    if(cargoFilter && item.Cargo !== cargoFilter) return false;
+    if(sitFilter && item.Situacao !== sitFilter) return false;
+    if(q){
+      const txt = `${item.Funcionario} ${item.EPI} ${item.Cargo}`.toLowerCase();
+      if(!txt.includes(q)) return false;
+    }
+    return true;
+  }).forEach(item=>{
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td>${item.id}</td>
+      <td>${escapeHtml(item.Funcionario)}</td>
+      <td>${escapeHtml(item.Cargo)}</td>
+      <td>${escapeHtml(item.EPI)}</td>
+      <td>${item["Data Fornecida"]||""}</td>
+      <td>${item["Proxima Troca"]||""}</td>
+      <td>${formatSituacao(item.Situacao)}</td>
+      <td>${escapeHtml(item.Alerta)}</td>
+      <td>
+        <button data-id="${item.id}" class="btnEdit">✏️</button>
+        <button data-id="${item.id}" class="btnDelete">🗑️</button>
+      </td>
+    `;
+    fragment.appendChild(tr);
+  });
+  tbody.appendChild(fragment);
+}
+
+/* small helper to style Situacao */
+function formatSituacao(s){
+  if(s === "Vencido") return `<span class="badge red">${s}</span>`;
+  if(s === "Dentro do prazo") return `<span class="badge green">${s}</span>`;
+  return `<span class="badge">${s}</span>`;
+}
+
+/* Escape helper */
+function escapeHtml(s){ return (s===null||s===undefined) ? "" : String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
+
+/* Modal & form logic */
+const modal = document.getElementById("modal");
+const form = document.getElementById("formEPI");
+const formTitle = document.getElementById("formTitle");
+const inputFuncionario = document.getElementById("inputFuncionario");
+const inputCargo = document.getElementById("inputCargo");
+const inputEPI = document.getElementById("inputEPI");
+const inputDataFor = document.getElementById("inputDataFor");
+const inputValidade = document.getElementById("inputValidade");
+const inputQuantidade = document.getElementById("inputQuantidade");
+const inputObs = document.getElementById("inputObs");
+let editingId = null;
+
+document.getElementById("btnAdd").addEventListener("click", ()=>{
+  openModalForNew();
+});
+document.getElementById("btnCancel").addEventListener("click", closeModal);
+modal.addEventListener("click", (e)=>{ if(e.target === modal) closeModal(); });
+
+function openModalForNew(){
+  editingId = null;
+  formTitle.textContent = "Novo registro";
+  inputFuncionario.value = "";
+  inputCargo.value = "";
+  inputEPI.value = "";
+  inputDataFor.value = new Date().toISOString().slice(0,10);
+  inputValidade.value = 90;
+  inputQuantidade.value = 1;
+  inputObs.value = "";
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden","false");
+}
+
+function closeModal(){
+  modal.classList.remove("open");
+  modal.setAttribute("aria-hidden","true");
+}
+
+function openModalForEdit(id){
+  const rec = data.find(r=>r.id === id);
+  if(!rec) return alert("Registro não encontrado");
+  editingId = id;
+  formTitle.textContent = "Editar registro #" + id;
+  inputFuncionario.value = rec.Funcionario;
+  inputCargo.value = rec.Cargo;
+  inputEPI.value = rec.EPI;
+  inputDataFor.value = rec["Data Fornecida"];
+  inputValidade.value = rec["Validade (dias)"];
+  inputQuantidade.value = rec["Quantidade"] || 1;
+  inputObs.value = rec.Observacoes || "";
+  modal.classList.add("open");
+  modal.setAttribute("aria-hidden","false");
+}
+
+/* Submit form: add or edit */
+form.addEventListener("submit", (ev)=>{
+  ev.preventDefault();
+  const obj = {
+    Empresa: "SoldaForte Ltda.",
+    Funcionario: inputFuncionario.value.trim(),
+    Cargo: inputCargo.value.trim(),
+    EPI: inputEPI.value.trim(),
+    "Data Fornecida": inputDataFor.value,
+    "Validade (dias)": Number(inputValidade.value),
+    Quantidade: Number(inputQuantidade.value) || 1
+  };
+  // compute Proxima Troca
+  const df = parseDate(obj["Data Fornecida"]);
+  const prox = new Date(df.getTime() + obj["Validade (dias)"] * 24*60*60*1000);
+  obj["Proxima Troca"] = prox.toISOString().slice(0,10);
+  const status = computeStatus(obj["Proxima Troca"]);
+  obj.Situacao = status.Situacao;
+  obj.Alerta = status.Alerta;
+
+  if(editingId){
+    // update
+    const idx = data.findIndex(r=>r.id===editingId);
+    if(idx>=0){
+      obj.id = editingId;
+      data[idx] = Object.assign({}, data[idx], obj);
+      saveData(data);
+      populateFilters();
+      renderTable();
+      closeModal();
+      return;
+    } else {
+      alert("Erro ao editar: registro não encontrado");
+    }
+  } else {
+    // new id
+    const newId = data.reduce((m,r)=>Math.max(m,r.id),0) + 1;
+    obj.id = newId;
+    data.push(obj);
+    saveData(data);
+    populateFilters();
+    renderTable();
+    closeModal();
+  }
+});
+
+/* Edit & Delete buttons (event delegation) */
+tbody.addEventListener("click", (e)=>{
+  const btn = e.target.closest("button");
+  if(!btn) return;
+  const id = Number(btn.dataset.id);
+  if(btn.classList.contains("btnEdit")) openModalForEdit(id);
+  if(btn.classList.contains("btnDelete")){
+    if(confirm("Excluir registro ID " + id + " ?")){
+      data = data.filter(r=>r.id !== id);
+      saveData(data);
+      populateFilters();
+      renderTable();
+    }
+  }
+});
+
+/* Search & filters */
+[searchInput, filterEPI, filterCargo, filterSituacao].forEach(el=>{
+  el.addEventListener("input", ()=> renderTable());
+});
+
+/* Export CSV */
+document.getElementById("btnExport").addEventListener("click", ()=>{
+  exportToCSV();
+});
+
+function exportToCSV(){
+  const rows = [];
+  const headers = ["id","Empresa","Funcionario","Cargo","EPI","Data Fornecida","Validade (dias)","Quantidade","Proxima Troca","Situacao","Alerta"];
+  rows.push(headers);
+  // apply current filters & search
+  const q = (searchInput.value||"").toLowerCase();
+  const epiFilter = filterEPI.value; const cargoFilter = filterCargo.value; const sitFilter = filterSituacao.value;
+  data.filter(item=>{
+    if(epiFilter && item.EPI !== epiFilter) return false;
+    if(cargoFilter && item.Cargo !== cargoFilter) return false;
+    if(sitFilter && item.Situacao !== sitFilter) return false;
+    if(q){
+      const txt = `${item.Funcionario} ${item.EPI} ${item.Cargo}`.toLowerCase();
+      if(!txt.includes(q)) return false;
+    }
+    return true;
+  }).forEach(item=>{
+    rows.push(headers.map(h=>{
+      const v = item[h]!==undefined ? String(item[h]) : "";
+      return `"${v.replace(/"/g,'""')}"`;
+    }).join(","));
+  });
+  // make csv content
+  const csvContent = rows.map(r=>Array.isArray(r)? r.join(",") : r).join("\n");
+  const blob = new Blob([csvContent], {type: "text/csv;charset=utf-8;"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  const name = "controle_epi_soldaforte_export.csv";
+  a.download = name;
+  a.click();
+  URL.revokeObjectURL(url);
+}
+
+/* Reset data -> restore initialData */
+document.getElementById("btnReset").addEventListener("click", ()=>{
+  if(confirm("Restaurar os dados iniciais (irá apagar alterações locais)?")){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(initialData, null, 2));
+    data = loadData();
+    populateFilters();
+    renderTable();
+    alert("Dados restaurados.");
+  }
+});
+
+/* Initialize UI */
+(function init(){
+  populateFilters();
+  renderTable();
+})();
+
+/* Accessibility: close modal on ESC */
+document.addEventListener("keydown", (e)=>{ if(e.key==="Escape") closeModal(); });
+
+</script>
+</body>
+</html>
