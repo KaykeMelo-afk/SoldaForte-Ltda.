@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Controle de EPI</title>
+    <style>
+        body{
+            font-family: Arial, sans-serif;
+            margin:0;
+            background:#f4f6f8;
+        }
+        #inicio{
+            height:100vh;
+            display:flex;
+            flex-direction:column;
+            justify-content:center;
+            align-items:center;
+            background:#0a58ca;
+            color:white;
+        }
+        #inicio button{
+            padding:15px 30px;
+            font-size:18px;
+            border:none;
+            border-radius:5px;
+            cursor:pointer;
+            margin-top:20px;
+        }
+        #sistema{
+            display:none;
+            padding:20px;
+        }
+        input, button{
+            padding:8px;
+            margin:5px 0;
+        }
+        table{
+            width:100%;
+            border-collapse:collapse;
+            margin-top:20px;
+        }
+        th, td{
+            border:1px solid #ccc;
+            padding:8px;
+            text-align:center;
+        }
+        th{
+            background:#e9ecef;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TELA INICIAL -->
+<div id="inicio">
+    <h1>Controle de EPI</h1>
+    <p>Sistema de registro e controle</p>
+    <button onclick="entrar()">Acessar sistema</button>
+</div>
+
+<!-- SISTEMA -->
+<div id="sistema">
+    <h2>Registro de Entrega de EPI</h2>
+
+    <input id="nome" placeholder="Nome do funcionário"><br>
+    <input id="epi" placeholder="EPI entregue"><br>
+    <input type="date" id="data"><br>
+    <button onclick="registrar()">Registrar</button>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Funcionário</th>
+                <th>EPI</th>
+                <th>Data</th>
+            </tr>
+        </thead>
+        <tbody id="tabela"></tbody>
+    </table>
+</div>
+
+<script>
+    function entrar(){
+        document.getElementById("inicio").style.display="none";
+        document.getElementById("sistema").style.display="block";
+    }
+
+    function registrar(){
+        let nome = nome.value;
+        let epi = document.getElementById("epi").value;
+        let data = document.getElementById("data").value;
+
+        if(!nome || !epi || !data){
+            alert("Preencha todos os campos");
+            return;
+        }
+
+        let linha = `
+            <tr>
+                <td>${nome}</td>
+                <td>${epi}</td>
+                <td>${data}</td>
+            </tr>
+        `;
+        document.getElementById("tabela").innerHTML += linha;
+    }
+</script>
+
+</body>
+</html>
