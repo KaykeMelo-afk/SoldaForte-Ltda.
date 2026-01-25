@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <title>Controle de EPI - SoldaForte</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root{
+      --blue:#0a58ca;
+      --green:#28a745;
+      --yellow:#ffc107;
+      --red:#dc3545;
+      --bg:#f4f6f8;
+    }
+
+    body{
+      font-family: Arial, Helvetica, sans-serif;
+      margin:0;
+      background:var(--bg);
+    }
+
+    /* ===== TELA INICIAL ===== */
+    #inicio{
+      height:100vh;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      background:var(--blue);
+      color:white;
+      text-align:center;
+    }
+
+    #inicio button{
+      padding:15px 30px;
+      font-size:18px;
+      border:none;
+      border-radius:6px;
+      cursor:pointer;
+      margin-top:20px;
+    }
+
+    /* ===== SISTEMA ===== */
+    #sistema{
+      display:none;
+      padding:20px;
+    }
+
+    header{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:10px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      margin-top:20px;
+      background:white;
+    }
+
+    th, td{
+      border:1px solid #ddd;
+      padding:8px;
+      text-align:left;
+      font-size:14px;
+    }
+
+    th{
+      background:#e9ecef;
+    }
+
+    button{
+      padding:8px 12px;
+      border-radius:5px;
+      border:none;
+      cursor:pointer;
+    }
+
+    button.primary{
+      background:var(--blue);
+      color:white;
+    }
+
+    .badge{
+      padding:4px 8px;
+      border-radius:12px;
+      font-size:12px;
+      color:white;
+    }
+
+    .green{background:var(--green);}
+    .red{background:var(--red);}
+  </style>
+</head>
+
+<body>
+
+<!-- ===== TELA INICIAL ===== -->
+<div id="inicio">
+  <h1>Controle de EPI</h1>
+  <p>Sistema de registro e controle</p>
+  <button onclick="entrar()">Acessar sistema</button>
+</div>
+
+<!-- ===== SISTEMA COMPLETO ===== -->
+<div id="sistema">
+  <header>
+    <h2>Controle de EPI — SoldaForte Ltda.</h2>
+    <button class="primary" onclick="openModal()">➕ Novo registro</button>
+  </header>
+
+  <table id="tableEPI">
+    <thead>
+      <tr>
+        <th>ID</th>
+        <th>Funcionário</th>
+        <th>Cargo</th>
+        <th>EPI</th>
+        <th>Data fornecida</th>
+        <th>Próxima troca</th>
+        <th>Situação</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+</div>
+
+<script>
+  /* ===== TELA INICIAL ===== */
+  function entrar(){
+    document.getElementById("inicio").style.display = "none";
+    document.getElementById("sistema").style.display = "block";
+  }
+
+  /* ===== SISTEMA DE EPI (RESUMO FUNCIONAL) ===== */
+  let data = [
+    {id:1, funcionario:"João Silva", cargo:"Soldador", epi:"Máscara de solda", data:"2025-08-01", troca:"2026-01-28", situacao:"Dentro do prazo"},
+    {id:2, funcionario:"Maria Oliveira", cargo:"Técnica", epi:"Óculos", data:"2025-02-10", troca:"2025-08-09", situacao:"Vencido"}
+  ];
+
+  function render(){
+    const tbody = document.querySelector("#tableEPI tbody");
+    tbody.innerHTML = "";
+    data.forEach(r=>{
+      tbody.innerHTML += `
+        <tr>
+          <td>${r.id}</td>
+          <td>${r.funcionario}</td>
+          <td>${r.cargo}</td>
+          <td>${r.epi}</td>
+          <td>${r.data}</td>
+          <td>${r.troca}</td>
+          <td>
+            <span class="badge ${r.situacao === "Vencido" ? "red":"green"}">
+              ${r.situacao}
+            </span>
+          </td>
+        </tr>
+      `;
+    });
+  }
+
+  render();
+</script>
+
+</body>
+</html>
