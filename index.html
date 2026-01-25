@@ -1,119 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8" />
-  <title>Controle de EPI - SoldaForte</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+<meta charset="UTF-8">
+<title>Controle de EPI — SoldaForte Ltda.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    :root{
-      --blue:#0a58ca;
-      --green:#28a745;
-      --yellow:#ffc107;
-      --red:#dc3545;
-      --bg:#f4f6f8;
-    }
+<style>
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  background: #f4f6f8;
+}
 
-    body{
-      font-family: Arial, Helvetica, sans-serif;
-      margin:0;
-      background:var(--bg);
-    }
+/* ===== TELA INICIAL ===== */
+#inicio {
+  height: 100vh;
+  background: linear-gradient(135deg, #0d6efd, #003f88);
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
 
-    /* ===== TELA INICIAL ===== */
-    #inicio{
-      height:100vh;
-      display:flex;
-      flex-direction:column;
-      justify-content:center;
-      align-items:center;
-      background:var(--blue);
-      color:white;
-      text-align:center;
-    }
+.inicio-box {
+  text-align: center;
+  max-width: 500px;
+  padding: 30px;
+}
 
-    #inicio button{
-      padding:15px 30px;
-      font-size:18px;
-      border:none;
-      border-radius:6px;
-      cursor:pointer;
-      margin-top:20px;
-    }
+.inicio-box h1 {
+  font-size: 32px;
+  margin-bottom: 10px;
+}
 
-    /* ===== SISTEMA ===== */
-    #sistema{
-      display:none;
-      padding:20px;
-    }
+.inicio-box p {
+  font-size: 18px;
+  opacity: 0.9;
+}
 
-    header{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      flex-wrap:wrap;
-      gap:10px;
-    }
+.inicio-box button {
+  margin-top: 30px;
+  padding: 15px 40px;
+  font-size: 18px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background: white;
+  color: #0d6efd;
+  font-weight: bold;
+}
 
-    table{
-      width:100%;
-      border-collapse:collapse;
-      margin-top:20px;
-      background:white;
-    }
+/* ===== SISTEMA ===== */
+#sistema {
+  display: none;
+  padding: 20px;
+}
 
-    th, td{
-      border:1px solid #ddd;
-      padding:8px;
-      text-align:left;
-      font-size:14px;
-    }
+h2 {
+  margin-bottom: 15px;
+}
 
-    th{
-      background:#e9ecef;
-    }
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+}
 
-    button{
-      padding:8px 12px;
-      border-radius:5px;
-      border:none;
-      cursor:pointer;
-    }
+th, td {
+  padding: 10px;
+  border-bottom: 1px solid #ddd;
+  text-align: left;
+}
 
-    button.primary{
-      background:var(--blue);
-      color:white;
-    }
+th {
+  background: #0d6efd;
+  color: white;
+}
 
-    .badge{
-      padding:4px 8px;
-      border-radius:12px;
-      font-size:12px;
-      color:white;
-    }
+.status-ok {
+  color: green;
+  font-weight: bold;
+}
 
-    .green{background:var(--green);}
-    .red{background:var(--red);}
-  </style>
+.status-vencido {
+  color: red;
+  font-weight: bold;
+}
+
+.alerta {
+  color: orange;
+  font-weight: bold;
+}
+</style>
 </head>
 
 <body>
 
-<!-- ===== TELA INICIAL ===== -->
+<!-- ===== TELA DE INÍCIO ===== -->
 <div id="inicio">
-  <h1>Controle de EPI</h1>
-  <p>Sistema de registro e controle</p>
-  <button onclick="entrar()">Acessar sistema</button>
+  <div class="inicio-box">
+    <h1>Controle de EPI</h1>
+    <p>Sistema interno — SoldaForte Ltda.</p>
+    <button onclick="entrar()">Acessar sistema</button>
+  </div>
 </div>
 
-<!-- ===== SISTEMA COMPLETO ===== -->
+<!-- ===== SISTEMA ===== -->
 <div id="sistema">
-  <header>
-    <h2>Controle de EPI — SoldaForte Ltda.</h2>
-    <button class="primary" onclick="openModal()">➕ Novo registro</button>
-  </header>
+  <h2>Controle de EPI — SoldaForte Ltda.</h2>
 
-  <table id="tableEPI">
+  <table>
     <thead>
       <tr>
         <th>ID</th>
@@ -125,46 +121,54 @@
         <th>Situação</th>
       </tr>
     </thead>
-    <tbody></tbody>
+    <tbody id="tabela"></tbody>
   </table>
 </div>
 
 <script>
-  /* ===== TELA INICIAL ===== */
-  function entrar(){
-    document.getElementById("inicio").style.display = "none";
-    document.getElementById("sistema").style.display = "block";
-  }
+function entrar() {
+  document.getElementById("inicio").style.display = "none";
+  document.getElementById("sistema").style.display = "block";
+}
 
-  /* ===== SISTEMA DE EPI (RESUMO FUNCIONAL) ===== */
-  let data = [
-    {id:1, funcionario:"João Silva", cargo:"Soldador", epi:"Máscara de solda", data:"2025-08-01", troca:"2026-01-28", situacao:"Dentro do prazo"},
-    {id:2, funcionario:"Maria Oliveira", cargo:"Técnica", epi:"Óculos", data:"2025-02-10", troca:"2025-08-09", situacao:"Vencido"}
-  ];
+/* ===== DADOS COMPLETOS ===== */
+const dados = [
+ {id:1, nome:"João Silva", cargo:"Soldador", epi:"Máscara de solda", fornecida:"2025-08-01", troca:"2026-01-28"},
+ {id:2, nome:"João Silva", cargo:"Soldador", epi:"Luvas de raspa", fornecida:"2025-06-12", troca:"2025-09-10"},
+ {id:3, nome:"João Silva", cargo:"Soldador", epi:"Avental de couro", fornecida:"2025-07-20", troca:"2026-01-16"},
+ {id:4, nome:"João Silva", cargo:"Soldador", epi:"Protetor auricular", fornecida:"2025-09-15", troca:"2025-12-14"},
+ {id:5, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Óculos de proteção", fornecida:"2025-02-10", troca:"2025-08-09"},
+ {id:6, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Luvas de segurança", fornecida:"2025-07-01", troca:"2025-09-29"},
+ {id:7, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Protetor auricular", fornecida:"2025-10-10", troca:"2026-01-08"},
+ {id:8, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Botina de segurança", fornecida:"2025-04-05", troca:"2026-04-05"},
+ {id:9, nome:"Carlos Pereira", cargo:"Engenheiro de Processos", epi:"Capacete", fornecida:"2025-01-20", troca:"2027-01-20"}
+];
 
-  function render(){
-    const tbody = document.querySelector("#tableEPI tbody");
-    tbody.innerHTML = "";
-    data.forEach(r=>{
-      tbody.innerHTML += `
-        <tr>
-          <td>${r.id}</td>
-          <td>${r.funcionario}</td>
-          <td>${r.cargo}</td>
-          <td>${r.epi}</td>
-          <td>${r.data}</td>
-          <td>${r.troca}</td>
-          <td>
-            <span class="badge ${r.situacao === "Vencido" ? "red":"green"}">
-              ${r.situacao}
-            </span>
-          </td>
-        </tr>
-      `;
-    });
-  }
+function statusEPI(dataTroca) {
+  const hoje = new Date();
+  const troca = new Date(dataTroca);
+  const dias = Math.ceil((troca - hoje) / (1000*60*60*24));
 
-  render();
+  if (dias < 0) return `<span class="status-vencido">Vencido</span>`;
+  if (dias <= 7) return `<span class="alerta">Troca em breve</span>`;
+  return `<span class="status-ok">Dentro do prazo</span>`;
+}
+
+const tbody = document.getElementById("tabela");
+
+dados.forEach(d => {
+  tbody.innerHTML += `
+    <tr>
+      <td>${d.id}</td>
+      <td>${d.nome}</td>
+      <td>${d.cargo}</td>
+      <td>${d.epi}</td>
+      <td>${d.fornecida}</td>
+      <td>${d.troca}</td>
+      <td>${statusEPI(d.troca)}</td>
+    </tr>
+  `;
+});
 </script>
 
 </body>
