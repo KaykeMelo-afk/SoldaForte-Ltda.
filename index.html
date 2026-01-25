@@ -96,7 +96,7 @@ th {
 
 <body>
 
-<!-- ===== TELA DE INÍCIO ===== -->
+<!-- ===== TELA INICIAL ===== -->
 <div id="inicio">
   <div class="inicio-box">
     <h1>Controle de EPI</h1>
@@ -131,41 +131,80 @@ function entrar() {
   document.getElementById("sistema").style.display = "block";
 }
 
-/* ===== DADOS COMPLETOS ===== */
-const dados = [
- {id:1, nome:"João Silva", cargo:"Soldador", epi:"Máscara de solda", fornecida:"2025-08-01", troca:"2026-01-28"},
- {id:2, nome:"João Silva", cargo:"Soldador", epi:"Luvas de raspa", fornecida:"2025-06-12", troca:"2025-09-10"},
- {id:3, nome:"João Silva", cargo:"Soldador", epi:"Avental de couro", fornecida:"2025-07-20", troca:"2026-01-16"},
- {id:4, nome:"João Silva", cargo:"Soldador", epi:"Protetor auricular", fornecida:"2025-09-15", troca:"2025-12-14"},
- {id:5, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Óculos de proteção", fornecida:"2025-02-10", troca:"2025-08-09"},
- {id:6, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Luvas de segurança", fornecida:"2025-07-01", troca:"2025-09-29"},
- {id:7, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Protetor auricular", fornecida:"2025-10-10", troca:"2026-01-08"},
- {id:8, nome:"Maria Oliveira", cargo:"Técnica de Qualidade", epi:"Botina de segurança", fornecida:"2025-04-05", troca:"2026-04-05"},
- {id:9, nome:"Carlos Pereira", cargo:"Engenheiro de Processos", epi:"Capacete", fornecida:"2025-01-20", troca:"2027-01-20"}
+/* ===== DADOS (40 REGISTROS) ===== */
+const initialData = [
+  {id:1,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Máscara de solda",Fornecida:"2025-08-01",Troca:"2026-01-28"},
+  {id:2,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Luvas de raspa",Fornecida:"2025-06-12",Troca:"2025-09-10"},
+  {id:3,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Avental de couro",Fornecida:"2025-07-20",Troca:"2026-01-16"},
+  {id:4,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Protetor auricular",Fornecida:"2025-09-15",Troca:"2025-12-14"},
+
+  {id:5,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Óculos de proteção",Fornecida:"2025-02-10",Troca:"2025-08-09"},
+  {id:6,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Luvas de segurança",Fornecida:"2025-07-01",Troca:"2025-09-29"},
+  {id:7,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Protetor auricular",Fornecida:"2025-10-10",Troca:"2026-01-08"},
+  {id:8,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Botina de segurança",Fornecida:"2025-04-05",Troca:"2026-04-05"},
+
+  {id:9,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Capacete",Fornecida:"2025-01-20",Troca:"2027-01-20"},
+  {id:10,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Óculos de proteção",Fornecida:"2025-03-12",Troca:"2025-09-08"},
+  {id:11,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Botina de segurança",Fornecida:"2024-11-15",Troca:"2025-11-15"},
+  {id:12,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Protetor auricular",Fornecida:"2025-06-02",Troca:"2025-08-31"},
+
+  {id:13,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Máscara de solda",Fornecida:"2025-05-22",Troca:"2025-11-18"},
+  {id:14,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Avental de couro",Fornecida:"2025-04-08",Troca:"2025-10-05"},
+  {id:15,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Luvas de raspa",Fornecida:"2025-09-10",Troca:"2025-12-09"},
+  {id:16,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Protetor auricular",Fornecida:"2025-10-05",Troca:"2026-01-03"},
+
+  {id:17,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Óculos de proteção",Fornecida:"2025-08-14",Troca:"2026-02-10"},
+  {id:18,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Luvas de segurança",Fornecida:"2025-09-30",Troca:"2025-12-29"},
+  {id:19,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Protetor auricular",Fornecida:"2025-07-10",Troca:"2025-10-08"},
+  {id:20,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Botina de segurança",Fornecida:"2025-02-22",Troca:"2026-02-21"},
+
+  {id:21,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Capacete",Fornecida:"2024-12-01",Troca:"2026-11-30"},
+  {id:22,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Botina de segurança",Fornecida:"2025-04-12",Troca:"2026-04-12"},
+  {id:23,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Luvas de segurança",Fornecida:"2025-06-08",Troca:"2025-09-06"},
+  {id:24,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Óculos de proteção",Fornecida:"2025-03-10",Troca:"2025-09-06"},
+
+  {id:25,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Máscara de solda",Fornecida:"2025-07-14",Troca:"2026-01-10"},
+  {id:26,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Luvas de raspa",Fornecida:"2025-05-02",Troca:"2025-07-31"},
+  {id:27,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Avental de couro",Fornecida:"2025-10-02",Troca:"2026-03-31"},
+  {id:28,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Protetor auricular",Fornecida:"2025-09-01",Troca:"2025-11-30"},
+
+  {id:29,Funcionario:"Juliana Martins",Cargo:"Assistente Administrativa",EPI:"Luvas de segurança",Fornecida:"2025-09-22",Troca:"2025-12-21"},
+  {id:30,Funcionario:"Juliana Martins",Cargo:"Assistente Administrativa",EPI:"Calçado fechado",Fornecida:"2024-11-10",Troca:"2025-11-10"},
+
+  {id:31,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Capacete",Fornecida:"2025-02-02",Troca:"2027-02-02"},
+  {id:32,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Óculos de proteção",Fornecida:"2025-08-05",Troca:"2026-02-01"},
+  {id:33,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Luvas de segurança",Fornecida:"2025-09-12",Troca:"2025-12-11"},
+  {id:34,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Botina de segurança",Fornecida:"2025-03-20",Troca:"2026-03-20"},
+
+  {id:35,Funcionario:"Tatiane Rocha",Cargo:"Gerente de Vendas",EPI:"Calçado fechado",Fornecida:"2025-04-01",Troca:"2026-04-01"},
+  {id:36,Funcionario:"Tatiane Rocha",Cargo:"Gerente de Vendas",EPI:"Luvas de segurança",Fornecida:"2025-10-12",Troca:"2026-01-10"},
+
+  {id:37,Funcionario:"Marcos Nunes",Cargo:"Auxiliar",EPI:"Luvas de segurança",Fornecida:"2025-06-10",Troca:"2025-09-08"},
+  {id:38,Funcionario:"Bruno Teixeira",Cargo:"Auxiliar",EPI:"Calçado fechado",Fornecida:"2025-02-01",Troca:"2026-02-01"},
+  {id:39,Funcionario:"Rafael Souza",Cargo:"Auxiliar",EPI:"Protetor auricular",Fornecida:"2025-09-01",Troca:"2025-11-30"},
+  {id:40,Funcionario:"Diego Martins",Cargo:"Auxiliar",EPI:"Óculos de proteção",Fornecida:"2025-03-02",Troca:"2025-08-29"}
 ];
 
-function statusEPI(dataTroca) {
+function status(data) {
   const hoje = new Date();
-  const troca = new Date(dataTroca);
+  const troca = new Date(data);
   const dias = Math.ceil((troca - hoje) / (1000*60*60*24));
-
-  if (dias < 0) return `<span class="status-vencido">Vencido</span>`;
-  if (dias <= 7) return `<span class="alerta">Troca em breve</span>`;
-  return `<span class="status-ok">Dentro do prazo</span>`;
+  if (dias < 0) return '<span class="status-vencido">Vencido</span>';
+  if (dias <= 7) return '<span class="alerta">Troca em breve</span>';
+  return '<span class="status-ok">Dentro do prazo</span>';
 }
 
-const tbody = document.getElementById("tabela");
-
-dados.forEach(d => {
-  tbody.innerHTML += `
+const tabela = document.getElementById("tabela");
+initialData.forEach(d => {
+  tabela.innerHTML += `
     <tr>
       <td>${d.id}</td>
-      <td>${d.nome}</td>
-      <td>${d.cargo}</td>
-      <td>${d.epi}</td>
-      <td>${d.fornecida}</td>
-      <td>${d.troca}</td>
-      <td>${statusEPI(d.troca)}</td>
+      <td>${d.Funcionario}</td>
+      <td>${d.Cargo}</td>
+      <td>${d.EPI}</td>
+      <td>${d.Fornecida}</td>
+      <td>${d.Troca}</td>
+      <td>${status(d.Troca)}</td>
     </tr>
   `;
 });
