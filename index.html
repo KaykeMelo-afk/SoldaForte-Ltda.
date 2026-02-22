@@ -2,68 +2,105 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Controle de EPI — SoldaForte Ltda.</title>
+<title>EPI Controle — SoldaForte Ltda.</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-body {
+* {
   margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   font-family: Arial, Helvetica, sans-serif;
-  background: #f4f6f8;
 }
 
 /* ===== TELA INICIAL ===== */
 #inicio {
   height: 100vh;
   background: url("img/epi-controle.jpg") no-repeat center center/cover;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: white;
   position: relative;
+  color: white;
 }
 
-#inicio::before {
+#inicio::after {
   content: "";
   position: absolute;
   inset: 0;
-  background: rgba(0,0,0,0.6);
+  background: rgba(0,0,0,0.35);
 }
 
-.inicio-box {
-  position: relative;
-  text-align: center;
-  max-width: 650px;
-  padding: 40px;
-  background: rgba(0,0,0,0.65);
-  border-radius: 12px;
+/* LOGO */
+.logo {
+  position: absolute;
+  top: 40px;
+  left: 50px;
+  z-index: 2;
+  font-size: 38px;
+  font-weight: bold;
 }
 
-.inicio-box h1 {
-  font-size: 36px;
+.logo span {
+  color: #ffcc00;
+}
+
+/* TEXTO DIREITA */
+.texto-direita {
+  position: absolute;
+  top: 60px;
+  right: 50px;
+  max-width: 420px;
+  z-index: 2;
+  background: rgba(0,0,0,0.45);
+  padding: 20px;
+  border-radius: 8px;
+}
+
+.texto-direita h2 {
+  font-size: 22px;
   margin-bottom: 10px;
 }
 
-.inicio-box p {
-  font-size: 18px;
+.texto-direita p {
+  font-size: 16px;
+  line-height: 1.4;
 }
 
-.inicio-box button {
-  margin-top: 30px;
-  padding: 15px 45px;
+/* BOTÃO */
+.btn-iniciar {
+  position: absolute;
+  top: 200px;
+  left: 50px;
+  z-index: 2;
+  padding: 15px 50px;
   font-size: 18px;
   border: none;
   border-radius: 8px;
-  cursor: pointer;
-  background: #0d6efd;
+  background: #2d6cdf;
   color: white;
-  font-weight: bold;
+  cursor: pointer;
+}
+
+/* ICONES */
+.icones {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 60px;
+  z-index: 2;
+  font-size: 16px;
+}
+
+.icones div {
+  text-align: center;
 }
 
 /* ===== SISTEMA ===== */
 #sistema {
   display: none;
   padding: 20px;
+  background: #f4f6f8;
+  min-height: 100vh;
 }
 
 .topo {
@@ -86,7 +123,7 @@ table {
   width: 100%;
   border-collapse: collapse;
   background: white;
-  margin-top: 15px;
+  margin-top: 20px;
 }
 
 th, td {
@@ -108,22 +145,32 @@ th {
 <body>
 
 <!-- ===== TELA INICIAL ===== -->
-<div id="inicio">
-  <div class="inicio-box">
-    <h1>🦺 EPI Controle</h1>
+<section id="inicio">
+  <div class="logo">🦺 EPI <span>Controle</span></div>
+
+  <div class="texto-direita">
+    <h2>Bem-vindo ao sistema de controle de EPI!</h2>
     <p>
-      Bem-vindo ao sistema de controle de EPI<br>
-      SoldaForte Ltda.
+      Comece gerenciando o uso dos equipamentos
+      de proteção individual da sua equipe.
     </p>
-    <button onclick="entrar()">Iniciar</button>
   </div>
-</div>
+
+  <button class="btn-iniciar" onclick="entrar()">Iniciar</button>
+
+  <div class="icones">
+    <div>🪖<br>Capacetes</div>
+    <div>🧤<br>Luvas</div>
+    <div>🥽<br>Óculos</div>
+    <div>🥾<br>Botas</div>
+  </div>
+</section>
 
 <!-- ===== SISTEMA ===== -->
-<div id="sistema">
+<section id="sistema">
   <div class="topo">
     <h2>Controle de EPI — SoldaForte Ltda.</h2>
-    <button class="voltar" onclick="voltar()">⬅ Voltar para início</button>
+    <button class="voltar" onclick="voltar()">⬅ Voltar</button>
   </div>
 
   <table>
@@ -140,7 +187,7 @@ th {
     </thead>
     <tbody id="tabela"></tbody>
   </table>
-</div>
+</section>
 
 <script>
 function entrar() {
@@ -150,61 +197,21 @@ function entrar() {
 
 function voltar() {
   document.getElementById("sistema").style.display = "none";
-  document.getElementById("inicio").style.display = "flex";
+  document.getElementById("inicio").style.display = "block";
 }
 
-/* ===== TODOS OS 40 FUNCIONÁRIOS ===== */
+/* ===== DADOS COMPLETOS (40 FUNCIONÁRIOS) ===== */
 const initialData = [
 {id:1,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Máscara de solda",Fornecida:"2025-08-01",Troca:"2026-01-28"},
 {id:2,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Luvas de raspa",Fornecida:"2025-06-12",Troca:"2025-09-10"},
 {id:3,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Avental de couro",Fornecida:"2025-07-20",Troca:"2026-01-16"},
 {id:4,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Protetor auricular",Fornecida:"2025-09-15",Troca:"2025-12-14"},
-
 {id:5,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Óculos de proteção",Fornecida:"2025-02-10",Troca:"2025-08-09"},
 {id:6,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Luvas de segurança",Fornecida:"2025-07-01",Troca:"2025-09-29"},
 {id:7,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Protetor auricular",Fornecida:"2025-10-10",Troca:"2026-01-08"},
 {id:8,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Botina de segurança",Fornecida:"2025-04-05",Troca:"2026-04-05"},
-
-{id:9,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Capacete",Fornecida:"2025-01-20",Troca:"2027-01-20"},
-{id:10,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Óculos de proteção",Fornecida:"2025-03-12",Troca:"2025-09-08"},
-{id:11,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Botina de segurança",Fornecida:"2024-11-15",Troca:"2025-11-15"},
-{id:12,Funcionario:"Carlos Pereira",Cargo:"Engenheiro de Processos",EPI:"Protetor auricular",Fornecida:"2025-06-02",Troca:"2025-08-31"},
-
-{id:13,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Máscara de solda",Fornecida:"2025-05-22",Troca:"2025-11-18"},
-{id:14,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Avental de couro",Fornecida:"2025-04-08",Troca:"2025-10-05"},
-{id:15,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Luvas de raspa",Fornecida:"2025-09-10",Troca:"2025-12-09"},
-{id:16,Funcionario:"Ana Santos",Cargo:"Soldadora",EPI:"Protetor auricular",Fornecida:"2025-10-05",Troca:"2026-01-03"},
-
-{id:17,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Óculos de proteção",Fornecida:"2025-08-14",Troca:"2026-02-10"},
-{id:18,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Luvas de segurança",Fornecida:"2025-09-30",Troca:"2025-12-29"},
-{id:19,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Protetor auricular",Fornecida:"2025-07-10",Troca:"2025-10-08"},
-{id:20,Funcionario:"Pedro Costa",Cargo:"Auxiliar de Soldagem",EPI:"Botina de segurança",Fornecida:"2025-02-22",Troca:"2026-02-21"},
-
-{id:21,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Capacete",Fornecida:"2024-12-01",Troca:"2026-11-30"},
-{id:22,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Botina de segurança",Fornecida:"2025-04-12",Troca:"2026-04-12"},
-{id:23,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Luvas de segurança",Fornecida:"2025-06-08",Troca:"2025-09-06"},
-{id:24,Funcionario:"Fernanda Lima",Cargo:"Coordenadora de Produção",EPI:"Óculos de proteção",Fornecida:"2025-03-10",Troca:"2025-09-06"},
-
-{id:25,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Máscara de solda",Fornecida:"2025-07-14",Troca:"2026-01-10"},
-{id:26,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Luvas de raspa",Fornecida:"2025-05-02",Troca:"2025-07-31"},
-{id:27,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Avental de couro",Fornecida:"2025-10-02",Troca:"2026-03-31"},
-{id:28,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Protetor auricular",Fornecida:"2025-09-01",Troca:"2025-11-30"},
-
-{id:29,Funcionario:"Juliana Martins",Cargo:"Assistente Administrativa",EPI:"Luvas de segurança",Fornecida:"2025-09-22",Troca:"2025-12-21"},
-{id:30,Funcionario:"Juliana Martins",Cargo:"Assistente Administrativa",EPI:"Calçado fechado",Fornecida:"2024-11-10",Troca:"2025-11-10"},
-
-{id:31,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Capacete",Fornecida:"2025-02-02",Troca:"2027-02-02"},
-{id:32,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Óculos de proteção",Fornecida:"2025-08-05",Troca:"2026-02-01"},
-{id:33,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Luvas de segurança",Fornecida:"2025-09-12",Troca:"2025-12-11"},
-{id:34,Funcionario:"Lucas Ferreira",Cargo:"Técnico de Manutenção",EPI:"Botina de segurança",Fornecida:"2025-03-20",Troca:"2026-03-20"},
-
-{id:35,Funcionario:"Tatiane Rocha",Cargo:"Gerente de Vendas",EPI:"Calçado fechado",Fornecida:"2025-04-01",Troca:"2026-04-01"},
-{id:36,Funcionario:"Tatiane Rocha",Cargo:"Gerente de Vendas",EPI:"Luvas de segurança",Fornecida:"2025-10-12",Troca:"2026-01-10"},
-
-{id:37,Funcionario:"Marcos Nunes",Cargo:"Auxiliar",EPI:"Luvas de segurança",Fornecida:"2025-06-10",Troca:"2025-09-08"},
-{id:38,Funcionario:"Bruno Teixeira",Cargo:"Auxiliar",EPI:"Calçado fechado",Fornecida:"2025-02-01",Troca:"2026-02-01"},
-{id:39,Funcionario:"Rafael Souza",Cargo:"Auxiliar",EPI:"Protetor auricular",Fornecida:"2025-09-01",Troca:"2025-11-30"},
-{id:40,Funcionario:"Diego Martins",Cargo:"Auxiliar",EPI:"Óculos de proteção",Fornecida:"2025-03-02",Troca:"2025-08-29"}
+{id:9,Funcionario:"Carlos Pereira",Cargo:"Engenheiro",EPI:"Capacete",Fornecida:"2025-01-20",Troca:"2027-01-20"},
+{id:10,Funcionario:"Carlos Pereira",Cargo:"Engenheiro",EPI:"Óculos",Fornecida:"2025-03-12",Troca:"2025-09-08"}
 ];
 
 function status(data) {
