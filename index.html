@@ -1,246 +1,182 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
-<head> 
-<link rel="stylesheet" href="style.css">
-<script src="script.js" defer></script>
-<meta charset="UTF-8">
-<title>EPI Controle — SoldaForte Ltda.</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<head>
+<meta charset="utf-8" />
+<title>Controle de EPI - SoldaForte</title>
+<meta name="viewport" content="width=device-width,initial-scale=1" />
 
 <style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, Helvetica, sans-serif;
+:root{
+  --blue:#007bff; --green:#28a745; --yellow:#ffc107; --red:#dc3545;
+  --bg:#f8f9fa; --dark:#222;
 }
+body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);}
 
 /* ===== TELA INICIAL ===== */
-#inicio {
-  height: 100vh;
-  background: url("img/epi-controle.jpg") no-repeat center center/cover;
-  position: relative;
-  color: white;
+#inicio{
+  height:100vh;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  background:linear-gradient(135deg,#0a58ca,#06357a);
+  color:white;
+  text-align:center;
 }
-
-#inicio::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: rgba(0,0,0,0.35);
-}
-
-/* LOGO */
-.logo {
-  position: absolute;
-  top: 40px;
-  left: 50px;
-  z-index: 2;
-  font-size: 38px;
-  font-weight: bold;
-}
-
-.logo span {
-  color: #ffcc00;
-}
-
-/* TEXTO DIREITA */
-.texto-direita {
-  position: absolute;
-  top: 60px;
-  right: 50px;
-  max-width: 420px;
-  z-index: 2;
-  background: rgba(0,0,0,0.45);
-  padding: 20px;
-  border-radius: 8px;
-}
-
-.texto-direita h2 {
-  font-size: 22px;
-  margin-bottom: 10px;
-}
-
-.texto-direita p {
-  font-size: 16px;
-  line-height: 1.4;
-}
-
-/* BOTÃO */
-.btn-iniciar {
-  position: absolute;
-  top: 200px;
-  left: 50px;
-  z-index: 2;
-  padding: 15px 50px;
-  font-size: 18px;
-  border: none;
-  border-radius: 8px;
-  background: #2d6cdf;
-  color: white;
-  cursor: pointer;
-}
-
-/* ICONES */
-.icones {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 60px;
-  z-index: 2;
-  font-size: 16px;
-}
-
-.icones div {
-  text-align: center;
+#inicio h1{font-size:36px;margin-bottom:10px}
+#inicio p{font-size:18px;opacity:.9}
+#inicio button{
+  margin-top:25px;
+  padding:14px 36px;
+  font-size:18px;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  background:white;
+  color:#06357a;
+  font-weight:bold;
 }
 
 /* ===== SISTEMA ===== */
-#sistema {
-  display: none;
-  padding: 20px;
-  background: #f4f6f8;
-  min-height: 100vh;
-}
+#sistema{display:none;padding:20px}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
+button{padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
+.primary{background:var(--blue);color:white}
+.danger{background:var(--red);color:white}
+table{width:100%;border-collapse:collapse;margin-top:15px;background:white}
+th,td{padding:10px;border-bottom:1px solid #ddd;font-size:14px}
+th{background:var(--blue);color:white}
+.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+input,select{padding:8px;border-radius:6px;border:1px solid #ccc}
 
-.topo {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.voltar {
-  padding: 10px 25px;
-  border: none;
-  border-radius: 6px;
-  background: #6c757d;
-  color: white;
-  cursor: pointer;
-  font-weight: bold;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  background: white;
-  margin-top: 20px;
-}
-
-th, td {
-  padding: 10px;
-  border-bottom: 1px solid #ddd;
-}
-
-th {
-  background: #0d6efd;
-  color: white;
-}
-
-.status-ok { color: green; font-weight: bold; }
-.status-vencido { color: red; font-weight: bold; }
-.alerta { color: orange; font-weight: bold; }
+/* modal */
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center}
+.modal.open{display:flex}
+.card{background:white;padding:20px;border-radius:8px;width:90%;max-width:500px}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.full{grid-column:1/-1}
+.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
 </style>
 </head>
 
 <body>
 
-<!-- ===== TELA INICIAL ===== -->
-<section id="inicio">
-  <div class="logo">🦺 EPI <span>Controle</span></div>
+<!-- TELA INICIAL -->
+<div id="inicio">
+  <h1>Controle de EPI</h1>
+  <p>SoldaForte Ltda</p>
+  <button onclick="entrar()">Iniciar</button>
+</div>
 
-  <div class="texto-direita">
-    <h2>Bem-vindo ao sistema de controle de EPI!</h2>
-    <p>
-      Comece gerenciando o uso dos equipamentos
-      de proteção individual da sua equipe.
-    </p>
-  </div>
+<!-- SISTEMA -->
+<div id="sistema">
 
-  <button class="btn-iniciar" onclick="entrar()">Iniciar</button>
+<header>
+  <h2>Controle de EPI — SoldaForte</h2>
+  <button onclick="voltar()">⬅ Voltar para início</button>
+</header>
 
-  <div class="icones">
-    <div>🪖<br>Capacetes</div>
-    <div>🧤<br>Luvas</div>
-    <div>🥽<br>Óculos</div>
-    <div>🥾<br>Botas</div>
-  </div>
-</section>
+<div class="controls">
+  <input id="searchInput" placeholder="Pesquisar funcionário, EPI ou cargo">
+  <select id="filterEPI"><option value="">Filtrar por EPI</option></select>
+  <select id="filterCargo"><option value="">Filtrar por Cargo</option></select>
+  <select id="filterSituacao">
+    <option value="">Filtrar por Situação</option>
+    <option value="Dentro do prazo">Dentro do prazo</option>
+    <option value="Vencido">Vencido</option>
+  </select>
+  <button class="primary" onclick="openModal()">➕ Novo</button>
+  <button onclick="exportCSV()">📤 Exportar CSV</button>
+</div>
 
-<!-- ===== SISTEMA ===== -->
-<section id="sistema">
-  <div class="topo">
-    <h2>Controle de EPI — SoldaForte Ltda.</h2>
-    <button class="voltar" onclick="voltar()">⬅ Voltar</button>
-  </div>
+<table>
+<thead>
+<tr>
+<th>ID</th><th>Funcionário</th><th>Cargo</th><th>EPI</th>
+<th>Data</th><th>Próx. Troca</th><th>Situação</th><th>Ações</th>
+</tr>
+</thead>
+<tbody id="tbody"></tbody>
+</table>
 
-  <table>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Funcionário</th>
-        <th>Cargo</th>
-        <th>EPI</th>
-        <th>Data fornecida</th>
-        <th>Próxima troca</th>
-        <th>Situação</th>
-      </tr>
-    </thead>
-    <tbody id="tabela"></tbody>
-  </table>
-</section>
+</div>
+
+<!-- MODAL -->
+<div class="modal" id="modal">
+<div class="card">
+<h3>Novo Registro</h3>
+<div class="grid">
+<input id="fFuncionario" placeholder="Funcionário">
+<input id="fCargo" placeholder="Cargo">
+<input id="fEPI" placeholder="EPI">
+<input id="fData" type="date">
+<input id="fValidade" type="number" placeholder="Validade (dias)">
+</div>
+<div class="actions">
+<button onclick="closeModal()">Cancelar</button>
+<button class="primary" onclick="save()">Salvar</button>
+</div>
+</div>
+</div>
 
 <script>
-function entrar() {
-  document.getElementById("inicio").style.display = "none";
-  document.getElementById("sistema").style.display = "block";
+function entrar(){
+  inicio.style.display="none";
+  sistema.style.display="block";
 }
-
-function voltar() {
-  document.getElementById("sistema").style.display = "none";
-  document.getElementById("inicio").style.display = "block";
+function voltar(){
+  sistema.style.display="none";
+  inicio.style.display="flex";
 }
+</script>
 
-/* ===== DADOS COMPLETOS (40 FUNCIONÁRIOS) ===== */
-const initialData = [
-{id:1,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Máscara de solda",Fornecida:"2025-08-01",Troca:"2026-01-28"},
-{id:2,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Luvas de raspa",Fornecida:"2025-06-12",Troca:"2025-09-10"},
-{id:3,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Avental de couro",Fornecida:"2025-07-20",Troca:"2026-01-16"},
-{id:4,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Protetor auricular",Fornecida:"2025-09-15",Troca:"2025-12-14"},
-{id:5,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Óculos de proteção",Fornecida:"2025-02-10",Troca:"2025-08-09"},
-{id:6,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Luvas de segurança",Fornecida:"2025-07-01",Troca:"2025-09-29"},
-{id:7,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Protetor auricular",Fornecida:"2025-10-10",Troca:"2026-01-08"},
-{id:8,Funcionario:"Maria Oliveira",Cargo:"Técnica de Qualidade",EPI:"Botina de segurança",Fornecida:"2025-04-05",Troca:"2026-04-05"},
-{id:9,Funcionario:"Carlos Pereira",Cargo:"Engenheiro",EPI:"Capacete",Fornecida:"2025-01-20",Troca:"2027-01-20"},
-{id:10,Funcionario:"Carlos Pereira",Cargo:"Engenheiro",EPI:"Óculos",Fornecida:"2025-03-12",Troca:"2025-09-08"}
+<script>
+const STORAGE="epi_soldaforte";
+let data=JSON.parse(localStorage.getItem(STORAGE))||[
+  {id:1,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Capacete",Data:"2025-01-10",Val:365},
+  {id:2,Funcionario:"Maria Souza",Cargo:"Auxiliar",EPI:"Luvas",Data:"2025-03-01",Val:90},
+  {id:3,Funcionario:"Fernanda Lima",Cargo:"Coordenadora",EPI:"Botina",Data:"2025-02-15",Val:365},
+  {id:4,Funcionario:"Pedro Costa",Cargo:"Soldador",EPI:"Máscara de solda",Data:"2025-04-01",Val:180},
+  {id:5,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Óculos",Data:"2025-01-20",Val:180},
+  {id:6,Funcionario:"Tatiane Rocha",Cargo:"Gerente",EPI:"Calçado fechado",Data:"2025-01-05",Val:365}
 ];
 
-function status(data) {
-  const hoje = new Date();
-  const troca = new Date(data);
-  const dias = Math.ceil((troca - hoje) / (1000*60*60*24));
-  if (dias < 0) return '<span class="status-vencido">Vencido</span>';
-  if (dias <= 7) return '<span class="alerta">Troca em breve</span>';
-  return '<span class="status-ok">Dentro do prazo</span>';
-}
-
-const tabela = document.getElementById("tabela");
-initialData.forEach(d => {
-  tabela.innerHTML += `
-    <tr>
-      <td>${d.id}</td>
-      <td>${d.Funcionario}</td>
-      <td>${d.Cargo}</td>
-      <td>${d.EPI}</td>
-      <td>${d.Fornecida}</td>
-      <td>${d.Troca}</td>
-      <td>${status(d.Troca)}</td>
-    </tr>
-  `;
+function render(){
+tbody.innerHTML="";
+data.forEach(d=>{
+const prox=new Date(d.Data);prox.setDate(prox.getDate()+d.Val);
+const sit=(prox<new Date())?"Vencido":"Dentro do prazo";
+tbody.innerHTML+=`
+<tr>
+<td>${d.id}</td>
+<td>${d.Funcionario}</td>
+<td>${d.Cargo}</td>
+<td>${d.EPI}</td>
+<td>${d.Data}</td>
+<td>${prox.toISOString().slice(0,10)}</td>
+<td>${sit}</td>
+<td><button onclick="del(${d.id})">🗑</button></td>
+</tr>`;
 });
+localStorage.setItem(STORAGE,JSON.stringify(data));
+}
+render();
+
+function del(id){data=data.filter(d=>d.id!==id);render()}
+function openModal(){modal.classList.add("open")}
+function closeModal(){modal.classList.remove("open")}
+function save(){
+data.push({
+id:Date.now(),
+Funcionario:fFuncionario.value,
+Cargo:fCargo.value,
+EPI:fEPI.value,
+Data:fData.value,
+Val:Number(fValidade.value)
+});
+closeModal();render();
+}
 </script>
 
 </body>
 </html>
-
