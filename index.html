@@ -11,6 +11,7 @@
   --cinza:#f4f6f8;
   --verde:#28a745;
   --vermelho:#dc3545;
+  --cinza-escuro:#6c757d;
 }
 
 *{box-sizing:border-box}
@@ -25,7 +26,7 @@ body{
 #inicio{
   height:100vh;
   background:
-    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
     url("img/fundo.jpg") center/cover no-repeat;
   color:white;
   display:flex;
@@ -70,7 +71,7 @@ body{
   border-radius:8px;
   cursor:pointer;
   background:white;
-  color:#000;
+  color:black;
   font-weight:bold;
 }
 
@@ -85,6 +86,7 @@ header{
   justify-content:space-between;
   align-items:center;
   flex-wrap:wrap;
+  margin-bottom:15px;
 }
 
 header h2{margin:0}
@@ -94,21 +96,21 @@ header h2{margin:0}
   border:none;
   border-radius:6px;
   cursor:pointer;
-  background:#6c757d;
+  background:var(--cinza-escuro);
   color:white;
 }
 
 .filtros{
   display:flex;
   gap:10px;
-  flex-wrap:wrap;
-  margin:15px 0;
+  margin-bottom:15px;
 }
 
-input, select{
+input{
   padding:8px;
   border-radius:6px;
   border:1px solid #ccc;
+  width:260px;
 }
 
 table{
@@ -181,101 +183,74 @@ th{
 </div>
 
 <script>
+const inicio = document.getElementById("inicio");
+const sistema = document.getElementById("sistema");
+const tabela = document.getElementById("tabela");
+const pesquisa = document.getElementById("pesquisa");
+
 function entrar(){
   inicio.style.display="none";
   sistema.style.display="block";
 }
+
 function voltar(){
   sistema.style.display="none";
   inicio.style.display="flex";
 }
 
-/* ===== DADOS DOS FUNCIONÁRIOS (40) ===== */
-<script>
+/* ===== DADOS COMPLETOS — 40 REGISTROS ===== */
 const dados = [
-  {id:1,n:"João Silva",c:"Soldador",e:"Máscara de solda",f:"2025-01-10",t:"2025-07-10"},
-  {id:2,n:"João Silva",c:"Soldador",e:"Luvas de raspa",f:"2025-03-05",t:"2025-06-03"},
-  {id:3,n:"João Silva",c:"Soldador",e:"Avental de couro",f:"2025-02-20",t:"2026-02-20"},
-  {id:4,n:"João Silva",c:"Soldador",e:"Protetor auricular",f:"2025-04-01",t:"2025-10-01"},
+  {id:1,n:"João Silva",c:"Soldador",e:"Máscara de solda",f:"2025-08-01",t:"2026-01-28"},
+  {id:2,n:"João Silva",c:"Soldador",e:"Luvas de raspa",f:"2025-06-12",t:"2025-09-10"},
+  {id:3,n:"João Silva",c:"Soldador",e:"Avental de couro",f:"2025-07-20",t:"2026-01-16"},
+  {id:4,n:"João Silva",c:"Soldador",e:"Protetor auricular",f:"2025-09-15",t:"2025-12-14"},
 
-  {id:5,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Óculos de proteção",f:"2025-01-15",t:"2025-07-15"},
-  {id:6,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Botina de segurança",f:"2025-02-01",t:"2026-02-01"},
-  {id:7,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Luvas nitrílicas",f:"2025-03-10",t:"2025-06-08"},
-  {id:8,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Protetor auricular",f:"2025-04-18",t:"2025-10-18"},
+  {id:5,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-09"},
+  {id:6,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Luvas de segurança",f:"2025-07-01",t:"2025-09-29"},
+  {id:7,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Protetor auricular",f:"2025-10-10",t:"2026-01-08"},
+  {id:8,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Botina de segurança",f:"2025-04-05",t:"2026-04-05"},
 
-  {id:9,n:"Carlos Pereira",c:"Engenheiro de Segurança",e:"Capacete",f:"2025-01-05",t:"2027-01-05"},
-  {id:10,n:"Carlos Pereira",c:"Engenheiro de Segurança",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-12"},
+  {id:9,n:"Carlos Pereira",c:"Engenheiro",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
+  {id:10,n:"Carlos Pereira",c:"Engenheiro",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-08"},
+  {id:11,n:"Carlos Pereira",c:"Engenheiro",e:"Botina de segurança",f:"2024-11-15",t:"2025-11-15"},
+  {id:12,n:"Carlos Pereira",c:"Engenheiro",e:"Protetor auricular",f:"2025-06-02",t:"2025-08-31"},
 
-  {id:11,n:"Ana Costa",c:"Auxiliar de Produção",e:"Luvas de segurança",f:"2025-02-08",t:"2025-05-09"},
-  {id:12,n:"Ana Costa",c:"Auxiliar de Produção",e:"Botina de segurança",f:"2025-01-20",t:"2026-01-20"},
+  {id:13,n:"Ana Santos",c:"Soldadora",e:"Máscara de solda",f:"2025-05-22",t:"2025-11-18"},
+  {id:14,n:"Ana Santos",c:"Soldadora",e:"Avental de couro",f:"2025-04-08",t:"2025-10-05"},
+  {id:15,n:"Ana Santos",c:"Soldadora",e:"Luvas de raspa",f:"2025-09-10",t:"2025-12-09"},
+  {id:16,n:"Ana Santos",c:"Soldadora",e:"Protetor auricular",f:"2025-10-05",t:"2026-01-03"},
 
-  {id:13,n:"Pedro Santos",c:"Soldador",e:"Máscara de solda",f:"2025-02-14",t:"2025-08-14"},
-  {id:14,n:"Pedro Santos",c:"Soldador",e:"Luvas de raspa",f:"2025-03-01",t:"2025-05-30"},
-  {id:15,n:"Pedro Santos",c:"Soldador",e:"Avental de couro",f:"2025-01-25",t:"2026-01-25"},
+  {id:17,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Óculos de proteção",f:"2025-08-14",t:"2026-02-10"},
+  {id:18,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Luvas de segurança",f:"2025-09-30",t:"2025-12-29"},
+  {id:19,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Protetor auricular",f:"2025-07-10",t:"2025-10-08"},
+  {id:20,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Botina de segurança",f:"2025-02-22",t:"2026-02-21"},
 
-  {id:16,n:"Lucas Ferreira",c:"Mecânico",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-10"},
-  {id:17,n:"Lucas Ferreira",c:"Mecânico",e:"Luvas anticorte",f:"2025-03-18",t:"2025-06-16"},
-  {id:18,n:"Lucas Ferreira",c:"Mecânico",e:"Botina de segurança",f:"2025-01-30",t:"2026-01-30"},
+  {id:21,n:"Fernanda Lima",c:"Coordenadora",e:"Capacete",f:"2024-12-01",t:"2026-11-30"},
+  {id:22,n:"Fernanda Lima",c:"Coordenadora",e:"Botina de segurança",f:"2025-04-12",t:"2026-04-12"},
+  {id:23,n:"Fernanda Lima",c:"Coordenadora",e:"Luvas de segurança",f:"2025-06-08",t:"2025-09-06"},
+  {id:24,n:"Fernanda Lima",c:"Coordenadora",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-06"},
 
-  {id:19,n:"Fernanda Lima",c:"Supervisora",e:"Capacete",f:"2025-01-12",t:"2027-01-12"},
-  {id:20,n:"Fernanda Lima",c:"Supervisora",e:"Óculos de proteção",f:"2025-04-10",t:"2025-10-10"},
+  {id:25,n:"Ricardo Almeida",c:"Soldador",e:"Máscara de solda",f:"2025-07-14",t:"2026-01-10"},
+  {id:26,n:"Ricardo Almeida",c:"Soldador",e:"Luvas de raspa",f:"2025-05-02",t:"2025-07-31"},
+  {id:27,n:"Ricardo Almeida",c:"Soldador",e:"Avental de couro",f:"2025-10-02",t:"2026-03-31"},
+  {id:28,n:"Ricardo Almeida",c:"Soldador",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
 
-  {id:21,n:"Ricardo Alves",c:"Operador de Máquinas",e:"Protetor auricular",f:"2025-02-05",t:"2025-08-05"},
-  {id:22,n:"Ricardo Alves",c:"Operador de Máquinas",e:"Luvas de segurança",f:"2025-03-22",t:"2025-06-20"},
+  {id:29,n:"Juliana Martins",c:"Administrativo",e:"Luvas de segurança",f:"2025-09-22",t:"2025-12-21"},
+  {id:30,n:"Juliana Martins",c:"Administrativo",e:"Calçado fechado",f:"2024-11-10",t:"2025-11-10"},
 
-  {id:23,n:"Juliana Rocha",c:"Administrativo",e:"Calçado fechado",f:"2025-01-10",t:"2026-01-10"},
+  {id:31,n:"Lucas Ferreira",c:"Manutenção",e:"Capacete",f:"2025-02-02",t:"2027-02-02"},
+  {id:32,n:"Lucas Ferreira",c:"Manutenção",e:"Óculos de proteção",f:"2025-08-05",t:"2026-02-01"},
+  {id:33,n:"Lucas Ferreira",c:"Manutenção",e:"Luvas de segurança",f:"2025-09-12",t:"2025-12-11"},
+  {id:34,n:"Lucas Ferreira",c:"Manutenção",e:"Botina de segurança",f:"2025-03-20",t:"2026-03-20"},
 
-  {id:24,n:"Marcos Vinícius",c:"Soldador",e:"Máscara de solda",f:"2025-02-18",t:"2025-08-18"},
-  {id:25,n:"Marcos Vinícius",c:"Soldador",e:"Luvas de raspa",f:"2025-03-28",t:"2025-06-26"},
-
-  {id:26,n:"Paulo Henrique",c:"Almoxarife",e:"Botina de segurança",f:"2025-01-08",t:"2026-01-08"},
-  {id:27,n:"Paulo Henrique",c:"Almoxarife",e:"Luvas de segurança",f:"2025-02-15",t:"2025-05-16"},
-
-  {id:28,n:"Renata Gomes",c:"RH",e:"Calçado fechado",f:"2025-01-18",t:"2026-01-18"},
-
-  {id:29,n:"Bruno Tavares",c:"Eletricista",e:"Luvas isolantes",f:"2025-03-01",t:"2025-09-01"},
-  {id:30,n:"Bruno Tavares",c:"Eletricista",e:"Capacete",f:"2025-01-10",t:"2027-01-10"},
-
-  {id:31,n:"Daniel Moraes",c:"Operador de Empilhadeira",e:"Cinto de segurança",f:"2025-02-12",t:"2026-02-12"},
-  {id:32,n:"Daniel Moraes",c:"Operador de Empilhadeira",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
-
-  {id:33,n:"Aline Pacheco",c:"Auxiliar de Produção",e:"Luvas de segurança",f:"2025-03-05",t:"2025-06-03"},
-  {id:34,n:"Aline Pacheco",c:"Auxiliar de Produção",e:"Botina de segurança",f:"2025-01-25",t:"2026-01-25"},
-
-  {id:35,n:"Gustavo Nunes",c:"Soldador",e:"Protetor auricular",f:"2025-04-02",t:"2025-10-02"},
-  {id:36,n:"Gustavo Nunes",c:"Soldador",e:"Máscara de solda",f:"2025-02-22",t:"2025-08-22"},
-
-  {id:37,n:"Eduardo Farias",c:"Manutenção",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-10"},
-  {id:38,n:"Eduardo Farias",c:"Manutenção",e:"Luvas anticorte",f:"2025-04-01",t:"2025-06-30"},
-
-  {id:39,n:"Tatiane Rocha",c:"Gerente",e:"Calçado fechado",f:"2025-01-05",t:"2026-01-05"},
-  {id:40,n:"Tatiane Rocha",c:"Gerente",e:"Capacete",f:"2025-01-05",t:"2027-01-05"}
+  {id:35,n:"Tatiane Rocha",c:"Gerente",e:"Calçado fechado",f:"2025-04-01",t:"2026-04-01"},
+  {id:36,n:"Tatiane Rocha",c:"Gerente",e:"Luvas de segurança",f:"2025-10-12",t:"2026-01-10"},
+  {id:37,n:"Marcos Nunes",c:"Auxiliar",e:"Luvas de segurança",f:"2025-06-10",t:"2025-09-08"},
+  {id:38,n:"Bruno Teixeira",c:"Auxiliar",e:"Calçado fechado",f:"2025-02-01",t:"2026-02-01"},
+  {id:39,n:"Rafael Souza",c:"Auxiliar",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
+  {id:40,n:"Diego Martins",c:"Auxiliar",e:"Óculos de proteção",f:"2025-03-02",t:"2025-08-29"}
 ];
 
-function status(data){
-  return new Date(data) < new Date()
-    ? '<span class="status-vencido">Vencido</span>'
-    : '<span class="status-ok">Dentro do prazo</span>';
-}
-
-function render(lista){
-  tabela.innerHTML="";
-  lista.forEach(d=>{
-    tabela.innerHTML+=`
-    <tr>
-      <td>${d.id}</td>
-      <td>${d.n}</td>
-      <td>${d.c}</td>
-      <td>${d.e}</td>
-      <td>${d.f}</td>
-      <td>${d.t}</td>
-      <td>${status(d.t)}</td>
-    </tr>`;
-  });
-}
-
-render(dados);
-</script>
 function status(data){
   return new Date(data) < new Date()
     ? '<span class="status-vencido">Vencido</span>'
