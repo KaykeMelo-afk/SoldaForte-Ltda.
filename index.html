@@ -1,61 +1,135 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8" />
-<title>Controle de EPI - SoldaForte</title>
-<meta name="viewport" content="width=device-width,initial-scale=1" />
+<meta charset="UTF-8">
+<title>Controle de EPI — SoldaForte Ltda.</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
 :root{
-  --blue:#007bff; --green:#28a745; --yellow:#ffc107; --red:#dc3545;
-  --bg:#f8f9fa; --dark:#222;
+  --azul:#0d6efd;
+  --cinza:#f4f6f8;
+  --verde:#28a745;
+  --vermelho:#dc3545;
 }
-body{margin:0;font-family:Arial,Helvetica,sans-serif;background:var(--bg);}
+
+*{box-sizing:border-box}
+
+body{
+  margin:0;
+  font-family:Arial, Helvetica, sans-serif;
+  background:var(--cinza);
+}
 
 /* ===== TELA INICIAL ===== */
 #inicio{
   height:100vh;
+  background:
+    linear-gradient(rgba(0,0,0,.55),rgba(0,0,0,.55)),
+    url("img/fundo.jpg") center/cover no-repeat;
+  color:white;
   display:flex;
   flex-direction:column;
-  justify-content:center;
+  justify-content:space-between;
+  padding:30px;
+}
+
+.logo{
+  display:flex;
   align-items:center;
-  background:linear-gradient(135deg,#0a58ca,#06357a);
-  color:white;
+  gap:15px;
+}
+
+.logo img{
+  height:60px;
+}
+
+.logo h1{
+  font-size:28px;
+  margin:0;
+}
+
+.inicio-centro{
   text-align:center;
 }
-#inicio h1{font-size:36px;margin-bottom:10px}
-#inicio p{font-size:18px;opacity:.9}
-#inicio button{
+
+.inicio-centro h2{
+  font-size:32px;
+}
+
+.inicio-centro p{
+  font-size:18px;
+  opacity:.9;
+}
+
+.inicio-centro button{
   margin-top:25px;
-  padding:14px 36px;
+  padding:15px 45px;
   font-size:18px;
   border:none;
   border-radius:8px;
   cursor:pointer;
   background:white;
-  color:#06357a;
+  color:#000;
   font-weight:bold;
 }
 
 /* ===== SISTEMA ===== */
-#sistema{display:none;padding:20px}
-header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap}
-button{padding:8px 12px;border-radius:6px;border:none;cursor:pointer}
-.primary{background:var(--blue);color:white}
-.danger{background:var(--red);color:white}
-table{width:100%;border-collapse:collapse;margin-top:15px;background:white}
-th,td{padding:10px;border-bottom:1px solid #ddd;font-size:14px}
-th{background:var(--blue);color:white}
-.controls{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-input,select{padding:8px;border-radius:6px;border:1px solid #ccc}
+#sistema{
+  display:none;
+  padding:20px;
+}
 
-/* modal */
-.modal{position:fixed;inset:0;background:rgba(0,0,0,.5);display:none;align-items:center;justify-content:center}
-.modal.open{display:flex}
-.card{background:white;padding:20px;border-radius:8px;width:90%;max-width:500px}
-.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.full{grid-column:1/-1}
-.actions{display:flex;justify-content:flex-end;gap:10px;margin-top:15px}
+header{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  flex-wrap:wrap;
+}
+
+header h2{margin:0}
+
+.btn-voltar{
+  padding:8px 16px;
+  border:none;
+  border-radius:6px;
+  cursor:pointer;
+  background:#6c757d;
+  color:white;
+}
+
+.filtros{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  margin:15px 0;
+}
+
+input, select{
+  padding:8px;
+  border-radius:6px;
+  border:1px solid #ccc;
+}
+
+table{
+  width:100%;
+  border-collapse:collapse;
+  background:white;
+}
+
+th, td{
+  padding:10px;
+  border-bottom:1px solid #ddd;
+  font-size:14px;
+}
+
+th{
+  background:var(--azul);
+  color:white;
+}
+
+.status-ok{color:var(--verde);font-weight:bold}
+.status-vencido{color:var(--vermelho);font-weight:bold}
 </style>
 </head>
 
@@ -63,60 +137,47 @@ input,select{padding:8px;border-radius:6px;border:1px solid #ccc}
 
 <!-- TELA INICIAL -->
 <div id="inicio">
-  <h1>Controle de EPI</h1>
-  <p>SoldaForte Ltda</p>
-  <button onclick="entrar()">Iniciar</button>
+  <div class="logo">
+    <img src="img/logo.png" alt="Logo">
+    <h1>SoldaForte Ltda.</h1>
+  </div>
+
+  <div class="inicio-centro">
+    <h2>Controle de Equipamentos de Proteção Individual</h2>
+    <p>Sistema interno de gestão e acompanhamento de EPIs</p>
+    <button onclick="entrar()">INICIAR</button>
+  </div>
+
+  <div></div>
 </div>
 
 <!-- SISTEMA -->
 <div id="sistema">
 
 <header>
-  <h2>Controle de EPI — SoldaForte</h2>
-  <button onclick="voltar()">⬅ Voltar para início</button>
+  <h2>Controle de EPI</h2>
+  <button class="btn-voltar" onclick="voltar()">⬅ Voltar</button>
 </header>
 
-<div class="controls">
-  <input id="searchInput" placeholder="Pesquisar funcionário, EPI ou cargo">
-  <select id="filterEPI"><option value="">Filtrar por EPI</option></select>
-  <select id="filterCargo"><option value="">Filtrar por Cargo</option></select>
-  <select id="filterSituacao">
-    <option value="">Filtrar por Situação</option>
-    <option value="Dentro do prazo">Dentro do prazo</option>
-    <option value="Vencido">Vencido</option>
-  </select>
-  <button class="primary" onclick="openModal()">➕ Novo</button>
-  <button onclick="exportCSV()">📤 Exportar CSV</button>
+<div class="filtros">
+  <input id="pesquisa" placeholder="Pesquisar funcionário ou EPI">
 </div>
 
 <table>
 <thead>
 <tr>
-<th>ID</th><th>Funcionário</th><th>Cargo</th><th>EPI</th>
-<th>Data</th><th>Próx. Troca</th><th>Situação</th><th>Ações</th>
+<th>ID</th>
+<th>Funcionário</th>
+<th>Cargo</th>
+<th>EPI</th>
+<th>Data fornecida</th>
+<th>Próxima troca</th>
+<th>Situação</th>
 </tr>
 </thead>
-<tbody id="tbody"></tbody>
+<tbody id="tabela"></tbody>
 </table>
 
-</div>
-
-<!-- MODAL -->
-<div class="modal" id="modal">
-<div class="card">
-<h3>Novo Registro</h3>
-<div class="grid">
-<input id="fFuncionario" placeholder="Funcionário">
-<input id="fCargo" placeholder="Cargo">
-<input id="fEPI" placeholder="EPI">
-<input id="fData" type="date">
-<input id="fValidade" type="number" placeholder="Validade (dias)">
-</div>
-<div class="actions">
-<button onclick="closeModal()">Cancelar</button>
-<button class="primary" onclick="save()">Salvar</button>
-</div>
-</div>
 </div>
 
 <script>
@@ -128,54 +189,124 @@ function voltar(){
   sistema.style.display="none";
   inicio.style.display="flex";
 }
-</script>
 
+/* ===== DADOS DOS FUNCIONÁRIOS (40) ===== */
 <script>
-const STORAGE="epi_soldaforte";
-let data=JSON.parse(localStorage.getItem(STORAGE))||[
-  {id:1,Funcionario:"João Silva",Cargo:"Soldador",EPI:"Capacete",Data:"2025-01-10",Val:365},
-  {id:2,Funcionario:"Maria Souza",Cargo:"Auxiliar",EPI:"Luvas",Data:"2025-03-01",Val:90},
-  {id:3,Funcionario:"Fernanda Lima",Cargo:"Coordenadora",EPI:"Botina",Data:"2025-02-15",Val:365},
-  {id:4,Funcionario:"Pedro Costa",Cargo:"Soldador",EPI:"Máscara de solda",Data:"2025-04-01",Val:180},
-  {id:5,Funcionario:"Ricardo Almeida",Cargo:"Soldador",EPI:"Óculos",Data:"2025-01-20",Val:180},
-  {id:6,Funcionario:"Tatiane Rocha",Cargo:"Gerente",EPI:"Calçado fechado",Data:"2025-01-05",Val:365}
+const dados = [
+  {id:1,n:"João Silva",c:"Soldador",e:"Máscara de solda",f:"2025-01-10",t:"2025-07-10"},
+  {id:2,n:"João Silva",c:"Soldador",e:"Luvas de raspa",f:"2025-03-05",t:"2025-06-03"},
+  {id:3,n:"João Silva",c:"Soldador",e:"Avental de couro",f:"2025-02-20",t:"2026-02-20"},
+  {id:4,n:"João Silva",c:"Soldador",e:"Protetor auricular",f:"2025-04-01",t:"2025-10-01"},
+
+  {id:5,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Óculos de proteção",f:"2025-01-15",t:"2025-07-15"},
+  {id:6,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Botina de segurança",f:"2025-02-01",t:"2026-02-01"},
+  {id:7,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Luvas nitrílicas",f:"2025-03-10",t:"2025-06-08"},
+  {id:8,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Protetor auricular",f:"2025-04-18",t:"2025-10-18"},
+
+  {id:9,n:"Carlos Pereira",c:"Engenheiro de Segurança",e:"Capacete",f:"2025-01-05",t:"2027-01-05"},
+  {id:10,n:"Carlos Pereira",c:"Engenheiro de Segurança",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-12"},
+
+  {id:11,n:"Ana Costa",c:"Auxiliar de Produção",e:"Luvas de segurança",f:"2025-02-08",t:"2025-05-09"},
+  {id:12,n:"Ana Costa",c:"Auxiliar de Produção",e:"Botina de segurança",f:"2025-01-20",t:"2026-01-20"},
+
+  {id:13,n:"Pedro Santos",c:"Soldador",e:"Máscara de solda",f:"2025-02-14",t:"2025-08-14"},
+  {id:14,n:"Pedro Santos",c:"Soldador",e:"Luvas de raspa",f:"2025-03-01",t:"2025-05-30"},
+  {id:15,n:"Pedro Santos",c:"Soldador",e:"Avental de couro",f:"2025-01-25",t:"2026-01-25"},
+
+  {id:16,n:"Lucas Ferreira",c:"Mecânico",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-10"},
+  {id:17,n:"Lucas Ferreira",c:"Mecânico",e:"Luvas anticorte",f:"2025-03-18",t:"2025-06-16"},
+  {id:18,n:"Lucas Ferreira",c:"Mecânico",e:"Botina de segurança",f:"2025-01-30",t:"2026-01-30"},
+
+  {id:19,n:"Fernanda Lima",c:"Supervisora",e:"Capacete",f:"2025-01-12",t:"2027-01-12"},
+  {id:20,n:"Fernanda Lima",c:"Supervisora",e:"Óculos de proteção",f:"2025-04-10",t:"2025-10-10"},
+
+  {id:21,n:"Ricardo Alves",c:"Operador de Máquinas",e:"Protetor auricular",f:"2025-02-05",t:"2025-08-05"},
+  {id:22,n:"Ricardo Alves",c:"Operador de Máquinas",e:"Luvas de segurança",f:"2025-03-22",t:"2025-06-20"},
+
+  {id:23,n:"Juliana Rocha",c:"Administrativo",e:"Calçado fechado",f:"2025-01-10",t:"2026-01-10"},
+
+  {id:24,n:"Marcos Vinícius",c:"Soldador",e:"Máscara de solda",f:"2025-02-18",t:"2025-08-18"},
+  {id:25,n:"Marcos Vinícius",c:"Soldador",e:"Luvas de raspa",f:"2025-03-28",t:"2025-06-26"},
+
+  {id:26,n:"Paulo Henrique",c:"Almoxarife",e:"Botina de segurança",f:"2025-01-08",t:"2026-01-08"},
+  {id:27,n:"Paulo Henrique",c:"Almoxarife",e:"Luvas de segurança",f:"2025-02-15",t:"2025-05-16"},
+
+  {id:28,n:"Renata Gomes",c:"RH",e:"Calçado fechado",f:"2025-01-18",t:"2026-01-18"},
+
+  {id:29,n:"Bruno Tavares",c:"Eletricista",e:"Luvas isolantes",f:"2025-03-01",t:"2025-09-01"},
+  {id:30,n:"Bruno Tavares",c:"Eletricista",e:"Capacete",f:"2025-01-10",t:"2027-01-10"},
+
+  {id:31,n:"Daniel Moraes",c:"Operador de Empilhadeira",e:"Cinto de segurança",f:"2025-02-12",t:"2026-02-12"},
+  {id:32,n:"Daniel Moraes",c:"Operador de Empilhadeira",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
+
+  {id:33,n:"Aline Pacheco",c:"Auxiliar de Produção",e:"Luvas de segurança",f:"2025-03-05",t:"2025-06-03"},
+  {id:34,n:"Aline Pacheco",c:"Auxiliar de Produção",e:"Botina de segurança",f:"2025-01-25",t:"2026-01-25"},
+
+  {id:35,n:"Gustavo Nunes",c:"Soldador",e:"Protetor auricular",f:"2025-04-02",t:"2025-10-02"},
+  {id:36,n:"Gustavo Nunes",c:"Soldador",e:"Máscara de solda",f:"2025-02-22",t:"2025-08-22"},
+
+  {id:37,n:"Eduardo Farias",c:"Manutenção",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-10"},
+  {id:38,n:"Eduardo Farias",c:"Manutenção",e:"Luvas anticorte",f:"2025-04-01",t:"2025-06-30"},
+
+  {id:39,n:"Tatiane Rocha",c:"Gerente",e:"Calçado fechado",f:"2025-01-05",t:"2026-01-05"},
+  {id:40,n:"Tatiane Rocha",c:"Gerente",e:"Capacete",f:"2025-01-05",t:"2027-01-05"}
 ];
 
-function render(){
-tbody.innerHTML="";
-data.forEach(d=>{
-const prox=new Date(d.Data);prox.setDate(prox.getDate()+d.Val);
-const sit=(prox<new Date())?"Vencido":"Dentro do prazo";
-tbody.innerHTML+=`
-<tr>
-<td>${d.id}</td>
-<td>${d.Funcionario}</td>
-<td>${d.Cargo}</td>
-<td>${d.EPI}</td>
-<td>${d.Data}</td>
-<td>${prox.toISOString().slice(0,10)}</td>
-<td>${sit}</td>
-<td><button onclick="del(${d.id})">🗑</button></td>
-</tr>`;
-});
-localStorage.setItem(STORAGE,JSON.stringify(data));
+function status(data){
+  return new Date(data) < new Date()
+    ? '<span class="status-vencido">Vencido</span>'
+    : '<span class="status-ok">Dentro do prazo</span>';
 }
-render();
 
-function del(id){data=data.filter(d=>d.id!==id);render()}
-function openModal(){modal.classList.add("open")}
-function closeModal(){modal.classList.remove("open")}
-function save(){
-data.push({
-id:Date.now(),
-Funcionario:fFuncionario.value,
-Cargo:fCargo.value,
-EPI:fEPI.value,
-Data:fData.value,
-Val:Number(fValidade.value)
-});
-closeModal();render();
+function render(lista){
+  tabela.innerHTML="";
+  lista.forEach(d=>{
+    tabela.innerHTML+=`
+    <tr>
+      <td>${d.id}</td>
+      <td>${d.n}</td>
+      <td>${d.c}</td>
+      <td>${d.e}</td>
+      <td>${d.f}</td>
+      <td>${d.t}</td>
+      <td>${status(d.t)}</td>
+    </tr>`;
+  });
 }
+
+render(dados);
+</script>
+function status(data){
+  return new Date(data) < new Date()
+    ? '<span class="status-vencido">Vencido</span>'
+    : '<span class="status-ok">Dentro do prazo</span>';
+}
+
+function render(lista){
+  tabela.innerHTML="";
+  lista.forEach(d=>{
+    tabela.innerHTML+=`
+    <tr>
+      <td>${d.id}</td>
+      <td>${d.n}</td>
+      <td>${d.c}</td>
+      <td>${d.e}</td>
+      <td>${d.f}</td>
+      <td>${d.t}</td>
+      <td>${status(d.t)}</td>
+    </tr>`;
+  });
+}
+
+render(dados);
+
+pesquisa.addEventListener("input",()=>{
+  const v=pesquisa.value.toLowerCase();
+  render(dados.filter(d=>
+    d.n.toLowerCase().includes(v) ||
+    d.e.toLowerCase().includes(v)
+  ));
+});
 </script>
 
 </body>
