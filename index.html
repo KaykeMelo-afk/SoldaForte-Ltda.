@@ -41,27 +41,12 @@ body{
   gap:15px;
 }
 
-.logo img{
-  height:60px;
-}
+.logo img{height:60px}
+.logo h1{font-size:28px;margin:0}
 
-.logo h1{
-  font-size:28px;
-  margin:0;
-}
-
-.inicio-centro{
-  text-align:center;
-}
-
-.inicio-centro h2{
-  font-size:32px;
-}
-
-.inicio-centro p{
-  font-size:18px;
-  opacity:.9;
-}
+.inicio-centro{text-align:center}
+.inicio-centro h2{font-size:32px}
+.inicio-centro p{font-size:18px;opacity:.9}
 
 .inicio-centro button{
   margin-top:25px;
@@ -76,7 +61,9 @@ body{
 }
 
 /* ===== SISTEMA ===== */
-#sistema{
+#sistema,
+#funcionarios,
+#perfil{
   display:none;
   padding:20px;
 }
@@ -132,6 +119,15 @@ th{
 
 .status-ok{color:var(--verde);font-weight:bold}
 .status-vencido{color:var(--vermelho);font-weight:bold}
+
+.lista-funcionarios li{
+  background:white;
+  margin:10px 0;
+  padding:12px;
+  border-radius:8px;
+  cursor:pointer;
+  list-style:none;
+}
 </style>
 </head>
 
@@ -153,96 +149,70 @@ th{
   <div></div>
 </div>
 
-<!-- SISTEMA -->
-<div id="sistema">
+<!-- LISTA DE FUNCIONÁRIOS -->
+<div id="funcionarios"></div>
 
-<header>
-  <h2>Controle de EPI</h2>
-  <button class="btn-voltar" onclick="voltar()">⬅ Voltar</button>
-</header>
-
-<div class="filtros">
-  <input id="pesquisa" placeholder="Pesquisar funcionário ou EPI">
-</div>
-
-<table>
-<thead>
-<tr>
-<th>ID</th>
-<th>Funcionário</th>
-<th>Cargo</th>
-<th>EPI</th>
-<th>Data fornecida</th>
-<th>Próxima troca</th>
-<th>Situação</th>
-</tr>
-</thead>
-<tbody id="tabela"></tbody>
-</table>
-
-</div>
+<!-- PERFIL -->
+<div id="perfil"></div>
 
 <script>
 const inicio = document.getElementById("inicio");
-const sistema = document.getElementById("sistema");
-const tabela = document.getElementById("tabela");
-const pesquisa = document.getElementById("pesquisa");
+const funcionariosTela = document.getElementById("funcionarios");
+const perfilTela = document.getElementById("perfil");
 
+/* ===== NAVEGAÇÃO ===== */
 function entrar(){
   inicio.style.display="none";
-  sistema.style.display="block";
+  mostrarFuncionarios();
 }
 
-function voltar(){
-  sistema.style.display="none";
+function voltarInicio(){
+  funcionariosTela.style.display="none";
+  perfilTela.style.display="none";
   inicio.style.display="flex";
 }
 
-/* ===== DADOS COMPLETOS — 40 REGISTROS ===== */
+function voltarFuncionarios(){
+  perfilTela.style.display="none";
+  funcionariosTela.style.display="block";
+}
+
+/* ===== DADOS COMPLETOS ===== */
 const dados = [
   {id:1,n:"João Silva",c:"Soldador",e:"Máscara de solda",f:"2025-08-01",t:"2026-01-28"},
   {id:2,n:"João Silva",c:"Soldador",e:"Luvas de raspa",f:"2025-06-12",t:"2025-09-10"},
   {id:3,n:"João Silva",c:"Soldador",e:"Avental de couro",f:"2025-07-20",t:"2026-01-16"},
   {id:4,n:"João Silva",c:"Soldador",e:"Protetor auricular",f:"2025-09-15",t:"2025-12-14"},
-
   {id:5,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-09"},
   {id:6,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Luvas de segurança",f:"2025-07-01",t:"2025-09-29"},
   {id:7,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Protetor auricular",f:"2025-10-10",t:"2026-01-08"},
   {id:8,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Botina de segurança",f:"2025-04-05",t:"2026-04-05"},
-
   {id:9,n:"Carlos Pereira",c:"Engenheiro",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
   {id:10,n:"Carlos Pereira",c:"Engenheiro",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-08"},
   {id:11,n:"Carlos Pereira",c:"Engenheiro",e:"Botina de segurança",f:"2024-11-15",t:"2025-11-15"},
   {id:12,n:"Carlos Pereira",c:"Engenheiro",e:"Protetor auricular",f:"2025-06-02",t:"2025-08-31"},
-
   {id:13,n:"Ana Santos",c:"Soldadora",e:"Máscara de solda",f:"2025-05-22",t:"2025-11-18"},
   {id:14,n:"Ana Santos",c:"Soldadora",e:"Avental de couro",f:"2025-04-08",t:"2025-10-05"},
   {id:15,n:"Ana Santos",c:"Soldadora",e:"Luvas de raspa",f:"2025-09-10",t:"2025-12-09"},
   {id:16,n:"Ana Santos",c:"Soldadora",e:"Protetor auricular",f:"2025-10-05",t:"2026-01-03"},
-
   {id:17,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Óculos de proteção",f:"2025-08-14",t:"2026-02-10"},
   {id:18,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Luvas de segurança",f:"2025-09-30",t:"2025-12-29"},
   {id:19,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Protetor auricular",f:"2025-07-10",t:"2025-10-08"},
   {id:20,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Botina de segurança",f:"2025-02-22",t:"2026-02-21"},
-
   {id:21,n:"Fernanda Lima",c:"Coordenadora",e:"Capacete",f:"2024-12-01",t:"2026-11-30"},
   {id:22,n:"Fernanda Lima",c:"Coordenadora",e:"Botina de segurança",f:"2025-04-12",t:"2026-04-12"},
   {id:23,n:"Fernanda Lima",c:"Coordenadora",e:"Luvas de segurança",f:"2025-06-08",t:"2025-09-06"},
   {id:24,n:"Fernanda Lima",c:"Coordenadora",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-06"},
-
   {id:25,n:"Ricardo Almeida",c:"Soldador",e:"Máscara de solda",f:"2025-07-14",t:"2026-01-10"},
   {id:26,n:"Ricardo Almeida",c:"Soldador",e:"Luvas de raspa",f:"2025-05-02",t:"2025-07-31"},
   {id:27,n:"Ricardo Almeida",c:"Soldador",e:"Avental de couro",f:"2025-10-02",t:"2026-03-31"},
   {id:28,n:"Ricardo Almeida",c:"Soldador",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
-
   {id:29,n:"Juliana Martins",c:"Administrativo",e:"Luvas de segurança",f:"2025-09-22",t:"2025-12-21"},
   {id:30,n:"Juliana Martins",c:"Administrativo",e:"Calçado fechado",f:"2024-11-10",t:"2025-11-10"},
-
   {id:31,n:"Lucas Ferreira",c:"Manutenção",e:"Capacete",f:"2025-02-02",t:"2027-02-02"},
   {id:32,n:"Lucas Ferreira",c:"Manutenção",e:"Óculos de proteção",f:"2025-08-05",t:"2026-02-01"},
   {id:33,n:"Lucas Ferreira",c:"Manutenção",e:"Luvas de segurança",f:"2025-09-12",t:"2025-12-11"},
   {id:34,n:"Lucas Ferreira",c:"Manutenção",e:"Botina de segurança",f:"2025-03-20",t:"2026-03-20"},
-
   {id:35,n:"Tatiane Rocha",c:"Gerente",e:"Calçado fechado",f:"2025-04-01",t:"2026-04-01"},
   {id:36,n:"Tatiane Rocha",c:"Gerente",e:"Luvas de segurança",f:"2025-10-12",t:"2026-01-10"},
   {id:37,n:"Marcos Nunes",c:"Auxiliar",e:"Luvas de segurança",f:"2025-06-10",t:"2025-09-08"},
@@ -257,31 +227,59 @@ function status(data){
     : '<span class="status-ok">Dentro do prazo</span>';
 }
 
-function render(lista){
-  tabela.innerHTML="";
-  lista.forEach(d=>{
-    tabela.innerHTML+=`
-    <tr>
-      <td>${d.id}</td>
-      <td>${d.n}</td>
-      <td>${d.c}</td>
-      <td>${d.e}</td>
-      <td>${d.f}</td>
-      <td>${d.t}</td>
-      <td>${status(d.t)}</td>
-    </tr>`;
-  });
+function mostrarFuncionarios(){
+  const nomesUnicos = [...new Set(dados.map(d=>d.n))];
+
+  funcionariosTela.innerHTML = `
+    <header>
+      <h2>Funcionários</h2>
+      <button class="btn-voltar" onclick="voltarInicio()">⬅ Voltar</button>
+    </header>
+    <ul class="lista-funcionarios">
+      ${nomesUnicos.map(nome=>`
+        <li onclick="abrirPerfil('${nome}')">${nome}</li>
+      `).join("")}
+    </ul>
+  `;
+
+  funcionariosTela.style.display="block";
 }
 
-render(dados);
+function abrirPerfil(nome){
+  funcionariosTela.style.display="none";
 
-pesquisa.addEventListener("input",()=>{
-  const v=pesquisa.value.toLowerCase();
-  render(dados.filter(d=>
-    d.n.toLowerCase().includes(v) ||
-    d.e.toLowerCase().includes(v)
-  ));
-});
+  const registros = dados.filter(d=>d.n===nome);
+
+  perfilTela.innerHTML = `
+    <header>
+      <h2>${nome}</h2>
+      <button class="btn-voltar" onclick="voltarFuncionarios()">⬅ Voltar</button>
+    </header>
+
+    <table>
+      <thead>
+        <tr>
+          <th>EPI</th>
+          <th>Data fornecida</th>
+          <th>Próxima troca</th>
+          <th>Situação</th>
+        </tr>
+      </thead>
+      <tbody>
+        ${registros.map(d=>`
+          <tr>
+            <td>${d.e}</td>
+            <td>${d.f}</td>
+            <td>${d.t}</td>
+            <td>${status(d.t)}</td>
+          </tr>
+        `).join("")}
+      </tbody>
+    </table>
+  `;
+
+  perfilTela.style.display="block";
+}
 </script>
 
 </body>
