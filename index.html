@@ -6,11 +6,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-  .logo{
-width:180px;
-margin-bottom:20px;
-filter: drop-shadow(0 4px 10px rgba(0,0,0,.4));
-}
 :root{
 --azul:#0d6efd;
 --cinza:#f4f6f8;
@@ -28,12 +23,35 @@ background:var(--cinza);
 }
 
 /* ===== TELA INICIAL ===== */
-<div id="inicio">
-<img src="img/logo.png" class="logo" alt="Logo SoldaForte">
-<h1>SoldaForte Ltda.</h1>
-<h2>Controle de Equipamentos de Proteção Individual</h2>
-<button onclick="entrar()">INICIAR</button>
-</div>
+#inicio{
+height:100vh;
+background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url("img/fundo.jpg") center/cover no-repeat;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+}
+
+/* LOGO */
+.logo{
+width:180px;
+margin-bottom:20px;
+filter: drop-shadow(0 4px 10px rgba(0,0,0,.4));
+}
+
+#inicio button{
+margin-top:25px;
+padding:15px 45px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:white;
+font-weight:bold;
+}
 
 /* ===== TELAS ===== */
 #funcionarios,#perfil{
@@ -79,7 +97,6 @@ transition:.2s;
 
 .lista li:hover{transform:scale(1.02)}
 
-/* ===== PERFIL ===== */
 .topo{
 display:flex;
 gap:20px;
@@ -91,7 +108,6 @@ width:140px;
 border-radius:10px;
 }
 
-/* ===== TABELA ===== */
 table{
 width:100%;
 border-collapse:collapse;
@@ -115,7 +131,9 @@ color:white;
 </head>
 <body>
 
+<!-- ===== TELA INICIAL ===== -->
 <div id="inicio">
+<img src="img/logo.png" class="logo" alt="Logo SoldaForte">
 <h1>SoldaForte Ltda.</h1>
 <h2>Controle de Equipamentos de Proteção Individual</h2>
 <button onclick="entrar()">INICIAR</button>
@@ -191,6 +209,7 @@ const dados = [
 {id:40,n:"Diego Martins",e:"Óculos de proteção",f:"2025-03-02",t:"2025-08-29"}
 ];
 
+/* ===== FUNÇÕES ===== */
 function entrar(){inicio.style.display="none";mostrarFuncionarios();}
 function voltarInicio(){perfilTela.style.display="none";funcionariosTela.style.display="none";inicio.style.display="flex";}
 function voltarFuncionarios(){perfilTela.style.display="none";funcionariosTela.style.display="block";}
@@ -278,5 +297,3 @@ perfilTela.style.display="block";
 
 </body>
 </html>
-
-
