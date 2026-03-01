@@ -23,28 +23,12 @@ background:var(--cinza);
 }
 
 /* ===== TELA INICIAL ===== */
-#inicio{
-height:100vh;
-background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
-url("img/fundo.jpg") center/cover no-repeat;
-color:white;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-}
-
-#inicio button{
-margin-top:25px;
-padding:15px 45px;
-font-size:18px;
-border:none;
-border-radius:8px;
-cursor:pointer;
-background:white;
-font-weight:bold;
-}
+<div id="inicio">
+<img src="img/logo.png" class="logo" alt="Logo SoldaForte">
+<h1>SoldaForte Ltda.</h1>
+<h2>Controle de Equipamentos de Proteção Individual</h2>
+<button onclick="entrar()">INICIAR</button>
+</div>
 
 /* ===== TELAS ===== */
 #funcionarios,#perfil{
@@ -289,3 +273,4 @@ perfilTela.style.display="block";
 
 </body>
 </html>
+
