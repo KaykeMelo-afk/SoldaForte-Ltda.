@@ -7,278 +7,283 @@
 
 <style>
 :root{
-  --azul:#0d6efd;
-  --cinza:#f4f6f8;
-  --verde:#28a745;
-  --vermelho:#dc3545;
-  --cinza-escuro:#6c757d;
+--azul:#0d6efd;
+--cinza:#f4f6f8;
+--verde:#28a745;
+--vermelho:#dc3545;
+--cinza-escuro:#6c757d;
 }
 
 *{box-sizing:border-box}
 
 body{
-  margin:0;
-  font-family:Arial, Helvetica, sans-serif;
-  background:var(--cinza);
+margin:0;
+font-family:Arial, Helvetica, sans-serif;
+background:var(--cinza);
 }
 
 /* ===== TELA INICIAL ===== */
 #inicio{
-  height:100vh;
-  background:
-    linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
-    url("img/fundo.jpg") center/cover no-repeat;
-  color:white;
-  display:flex;
-  flex-direction:column;
-  justify-content:space-between;
-  padding:30px;
+height:100vh;
+background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
+url("img/fundo.jpg") center/cover no-repeat;
+color:white;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
 }
 
-.logo{
-  display:flex;
-  align-items:center;
-  gap:15px;
+#inicio button{
+margin-top:25px;
+padding:15px 45px;
+font-size:18px;
+border:none;
+border-radius:8px;
+cursor:pointer;
+background:white;
+font-weight:bold;
 }
 
-.logo img{height:60px}
-.logo h1{font-size:28px;margin:0}
-
-.inicio-centro{text-align:center}
-.inicio-centro h2{font-size:32px}
-.inicio-centro p{font-size:18px;opacity:.9}
-
-.inicio-centro button{
-  margin-top:25px;
-  padding:15px 45px;
-  font-size:18px;
-  border:none;
-  border-radius:8px;
-  cursor:pointer;
-  background:white;
-  color:black;
-  font-weight:bold;
-}
-
-/* ===== SISTEMA ===== */
-#sistema,
-#funcionarios,
-#perfil{
-  display:none;
-  padding:20px;
+/* ===== TELAS ===== */
+#funcionarios,#perfil{
+display:none;
+padding:30px;
 }
 
 header{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-bottom:15px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+margin-bottom:20px;
 }
 
-header h2{margin:0}
-
-.btn-voltar{
-  padding:8px 16px;
-  border:none;
-  border-radius:6px;
-  cursor:pointer;
-  background:var(--cinza-escuro);
-  color:white;
+.btn{
+padding:8px 16px;
+border:none;
+border-radius:6px;
+background:var(--cinza-escuro);
+color:white;
+cursor:pointer;
 }
 
-.filtros{
-  display:flex;
-  gap:10px;
-  margin-bottom:15px;
+/* ===== CARDS ===== */
+.card{
+background:white;
+padding:20px;
+border-radius:10px;
+box-shadow:0 4px 10px rgba(0,0,0,.08);
+margin-bottom:20px;
 }
 
-input{
-  padding:8px;
-  border-radius:6px;
-  border:1px solid #ccc;
-  width:260px;
+.lista li{
+list-style:none;
+padding:15px;
+margin-bottom:10px;
+background:white;
+border-radius:8px;
+cursor:pointer;
+box-shadow:0 2px 6px rgba(0,0,0,.05);
+transition:.2s;
 }
 
+.lista li:hover{transform:scale(1.02)}
+
+/* ===== PERFIL ===== */
+.topo{
+display:flex;
+gap:20px;
+flex-wrap:wrap;
+}
+
+.topo img{
+width:140px;
+border-radius:10px;
+}
+
+/* ===== TABELA ===== */
 table{
-  width:100%;
-  border-collapse:collapse;
-  background:white;
+width:100%;
+border-collapse:collapse;
+background:white;
 }
 
-th, td{
-  padding:10px;
-  border-bottom:1px solid #ddd;
-  font-size:14px;
+th,td{
+padding:10px;
+border-bottom:1px solid #ddd;
+font-size:14px;
 }
 
 th{
-  background:var(--azul);
-  color:white;
+background:var(--azul);
+color:white;
 }
 
 .status-ok{color:var(--verde);font-weight:bold}
 .status-vencido{color:var(--vermelho);font-weight:bold}
-
-.lista-funcionarios li{
-  background:white;
-  margin:10px 0;
-  padding:12px;
-  border-radius:8px;
-  cursor:pointer;
-  list-style:none;
-}
 </style>
 </head>
-
 <body>
 
-<!-- TELA INICIAL -->
 <div id="inicio">
-  <div class="logo">
-    <img src="img/logo.png" alt="Logo">
-    <h1>SoldaForte Ltda.</h1>
-  </div>
-
-  <div class="inicio-centro">
-    <h2>Controle de Equipamentos de Proteção Individual</h2>
-    <p>Sistema interno de gestão e acompanhamento de EPIs</p>
-    <button onclick="entrar()">INICIAR</button>
-  </div>
-
-  <div></div>
+<h1>SoldaForte Ltda.</h1>
+<h2>Controle de Equipamentos de Proteção Individual</h2>
+<button onclick="entrar()">INICIAR</button>
 </div>
 
-<!-- LISTA DE FUNCIONÁRIOS -->
 <div id="funcionarios"></div>
-
-<!-- PERFIL -->
 <div id="perfil"></div>
 
 <script>
-const inicio = document.getElementById("inicio");
-const funcionariosTela = document.getElementById("funcionarios");
-const perfilTela = document.getElementById("perfil");
+const inicio=document.getElementById("inicio");
+const funcionariosTela=document.getElementById("funcionarios");
+const perfilTela=document.getElementById("perfil");
 
-/* ===== NAVEGAÇÃO ===== */
-function entrar(){
-  inicio.style.display="none";
-  mostrarFuncionarios();
-}
-
-function voltarInicio(){
-  funcionariosTela.style.display="none";
-  perfilTela.style.display="none";
-  inicio.style.display="flex";
-}
-
-function voltarFuncionarios(){
-  perfilTela.style.display="none";
-  funcionariosTela.style.display="block";
-}
-
-/* ===== DADOS COMPLETOS ===== */
-const dados = [
-  {id:1,n:"João Silva",c:"Soldador",e:"Máscara de solda",f:"2025-08-01",t:"2026-01-28"},
-  {id:2,n:"João Silva",c:"Soldador",e:"Luvas de raspa",f:"2025-06-12",t:"2025-09-10"},
-  {id:3,n:"João Silva",c:"Soldador",e:"Avental de couro",f:"2025-07-20",t:"2026-01-16"},
-  {id:4,n:"João Silva",c:"Soldador",e:"Protetor auricular",f:"2025-09-15",t:"2025-12-14"},
-  {id:5,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-09"},
-  {id:6,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Luvas de segurança",f:"2025-07-01",t:"2025-09-29"},
-  {id:7,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Protetor auricular",f:"2025-10-10",t:"2026-01-08"},
-  {id:8,n:"Maria Oliveira",c:"Técnica de Qualidade",e:"Botina de segurança",f:"2025-04-05",t:"2026-04-05"},
-  {id:9,n:"Carlos Pereira",c:"Engenheiro",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
-  {id:10,n:"Carlos Pereira",c:"Engenheiro",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-08"},
-  {id:11,n:"Carlos Pereira",c:"Engenheiro",e:"Botina de segurança",f:"2024-11-15",t:"2025-11-15"},
-  {id:12,n:"Carlos Pereira",c:"Engenheiro",e:"Protetor auricular",f:"2025-06-02",t:"2025-08-31"},
-  {id:13,n:"Ana Santos",c:"Soldadora",e:"Máscara de solda",f:"2025-05-22",t:"2025-11-18"},
-  {id:14,n:"Ana Santos",c:"Soldadora",e:"Avental de couro",f:"2025-04-08",t:"2025-10-05"},
-  {id:15,n:"Ana Santos",c:"Soldadora",e:"Luvas de raspa",f:"2025-09-10",t:"2025-12-09"},
-  {id:16,n:"Ana Santos",c:"Soldadora",e:"Protetor auricular",f:"2025-10-05",t:"2026-01-03"},
-  {id:17,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Óculos de proteção",f:"2025-08-14",t:"2026-02-10"},
-  {id:18,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Luvas de segurança",f:"2025-09-30",t:"2025-12-29"},
-  {id:19,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Protetor auricular",f:"2025-07-10",t:"2025-10-08"},
-  {id:20,n:"Pedro Costa",c:"Auxiliar de Soldagem",e:"Botina de segurança",f:"2025-02-22",t:"2026-02-21"},
-  {id:21,n:"Fernanda Lima",c:"Coordenadora",e:"Capacete",f:"2024-12-01",t:"2026-11-30"},
-  {id:22,n:"Fernanda Lima",c:"Coordenadora",e:"Botina de segurança",f:"2025-04-12",t:"2026-04-12"},
-  {id:23,n:"Fernanda Lima",c:"Coordenadora",e:"Luvas de segurança",f:"2025-06-08",t:"2025-09-06"},
-  {id:24,n:"Fernanda Lima",c:"Coordenadora",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-06"},
-  {id:25,n:"Ricardo Almeida",c:"Soldador",e:"Máscara de solda",f:"2025-07-14",t:"2026-01-10"},
-  {id:26,n:"Ricardo Almeida",c:"Soldador",e:"Luvas de raspa",f:"2025-05-02",t:"2025-07-31"},
-  {id:27,n:"Ricardo Almeida",c:"Soldador",e:"Avental de couro",f:"2025-10-02",t:"2026-03-31"},
-  {id:28,n:"Ricardo Almeida",c:"Soldador",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
-  {id:29,n:"Juliana Martins",c:"Administrativo",e:"Luvas de segurança",f:"2025-09-22",t:"2025-12-21"},
-  {id:30,n:"Juliana Martins",c:"Administrativo",e:"Calçado fechado",f:"2024-11-10",t:"2025-11-10"},
-  {id:31,n:"Lucas Ferreira",c:"Manutenção",e:"Capacete",f:"2025-02-02",t:"2027-02-02"},
-  {id:32,n:"Lucas Ferreira",c:"Manutenção",e:"Óculos de proteção",f:"2025-08-05",t:"2026-02-01"},
-  {id:33,n:"Lucas Ferreira",c:"Manutenção",e:"Luvas de segurança",f:"2025-09-12",t:"2025-12-11"},
-  {id:34,n:"Lucas Ferreira",c:"Manutenção",e:"Botina de segurança",f:"2025-03-20",t:"2026-03-20"},
-  {id:35,n:"Tatiane Rocha",c:"Gerente",e:"Calçado fechado",f:"2025-04-01",t:"2026-04-01"},
-  {id:36,n:"Tatiane Rocha",c:"Gerente",e:"Luvas de segurança",f:"2025-10-12",t:"2026-01-10"},
-  {id:37,n:"Marcos Nunes",c:"Auxiliar",e:"Luvas de segurança",f:"2025-06-10",t:"2025-09-08"},
-  {id:38,n:"Bruno Teixeira",c:"Auxiliar",e:"Calçado fechado",f:"2025-02-01",t:"2026-02-01"},
-  {id:39,n:"Rafael Souza",c:"Auxiliar",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
-  {id:40,n:"Diego Martins",c:"Auxiliar",e:"Óculos de proteção",f:"2025-03-02",t:"2025-08-29"}
+/* ===== FUNCIONÁRIOS COMPLETOS ===== */
+const funcionarios=[
+{nome:"João Silva",cargo:"Soldador",cpf:"123.456.789-00",tel:"(31)98888-1111",email:"joao@soldaforte.com",adm:"2022-03-15",nasc:"1990-05-10",foto:"https://randomuser.me/api/portraits/men/1.jpg"},
+{nome:"Maria Oliveira",cargo:"Técnica de Qualidade",cpf:"234.567.890-11",tel:"(31)97777-2222",email:"maria@soldaforte.com",adm:"2021-06-01",nasc:"1992-08-20",foto:"https://randomuser.me/api/portraits/women/2.jpg"},
+{nome:"Carlos Pereira",cargo:"Engenheiro",cpf:"345.678.901-22",tel:"(31)96666-3333",email:"carlos@soldaforte.com",adm:"2020-01-10",nasc:"1988-02-18",foto:"https://randomuser.me/api/portraits/men/3.jpg"},
+{nome:"Ana Santos",cargo:"Soldadora",cpf:"456.789.012-33",tel:"(31)95555-4444",email:"ana@soldaforte.com",adm:"2023-02-05",nasc:"1995-09-12",foto:"https://randomuser.me/api/portraits/women/4.jpg"},
+{nome:"Pedro Costa",cargo:"Auxiliar de Soldagem",cpf:"567.890.123-44",tel:"(31)94444-5555",email:"pedro@soldaforte.com",adm:"2024-01-15",nasc:"1998-03-08",foto:"https://randomuser.me/api/portraits/men/5.jpg"},
+{nome:"Fernanda Lima",cargo:"Coordenadora",cpf:"678.901.234-55",tel:"(31)93333-6666",email:"fernanda@soldaforte.com",adm:"2019-11-01",nasc:"1985-07-22",foto:"https://randomuser.me/api/portraits/women/6.jpg"},
+{nome:"Ricardo Almeida",cargo:"Soldador",cpf:"789.012.345-66",tel:"(31)92222-7777",email:"ricardo@soldaforte.com",adm:"2022-08-10",nasc:"1991-12-05",foto:"https://randomuser.me/api/portraits/men/7.jpg"},
+{nome:"Juliana Martins",cargo:"Administrativo",cpf:"890.123.456-77",tel:"(31)91111-8888",email:"juliana@soldaforte.com",adm:"2020-09-20",nasc:"1993-04-16",foto:"https://randomuser.me/api/portraits/women/8.jpg"},
+{nome:"Lucas Ferreira",cargo:"Manutenção",cpf:"901.234.567-88",tel:"(31)90000-9999",email:"lucas@soldaforte.com",adm:"2021-12-12",nasc:"1989-06-30",foto:"https://randomuser.me/api/portraits/men/9.jpg"},
+{nome:"Tatiane Rocha",cargo:"Gerente",cpf:"112.233.445-99",tel:"(31)98877-6655",email:"tatiane@soldaforte.com",adm:"2018-05-14",nasc:"1984-01-25",foto:"https://randomuser.me/api/portraits/women/10.jpg"},
+{nome:"Marcos Nunes",cargo:"Auxiliar",cpf:"223.344.556-00",tel:"(31)97766-5544",email:"marcos@soldaforte.com",adm:"2023-04-18",nasc:"1999-11-02",foto:"https://randomuser.me/api/portraits/men/11.jpg"},
+{nome:"Bruno Teixeira",cargo:"Auxiliar",cpf:"334.455.667-11",tel:"(31)96655-4433",email:"bruno@soldaforte.com",adm:"2024-02-01",nasc:"2000-10-10",foto:"https://randomuser.me/api/portraits/men/12.jpg"},
+{nome:"Rafael Souza",cargo:"Auxiliar",cpf:"445.566.778-22",tel:"(31)95544-3322",email:"rafael@soldaforte.com",adm:"2023-07-07",nasc:"1997-03-14",foto:"https://randomuser.me/api/portraits/men/13.jpg"},
+{nome:"Diego Martins",cargo:"Auxiliar",cpf:"556.677.889-33",tel:"(31)94433-2211",email:"diego@soldaforte.com",adm:"2022-10-30",nasc:"1996-12-19",foto:"https://randomuser.me/api/portraits/men/14.jpg"}
 ];
 
+/* ===== SEUS 40 EPIs ORIGINAIS ===== */
+const dados = [
+{id:1,n:"João Silva",e:"Máscara de solda",f:"2025-08-01",t:"2026-01-28"},
+{id:2,n:"João Silva",e:"Luvas de raspa",f:"2025-06-12",t:"2025-09-10"},
+{id:3,n:"João Silva",e:"Avental de couro",f:"2025-07-20",t:"2026-01-16"},
+{id:4,n:"João Silva",e:"Protetor auricular",f:"2025-09-15",t:"2025-12-14"},
+{id:5,n:"Maria Oliveira",e:"Óculos de proteção",f:"2025-02-10",t:"2025-08-09"},
+{id:6,n:"Maria Oliveira",e:"Luvas de segurança",f:"2025-07-01",t:"2025-09-29"},
+{id:7,n:"Maria Oliveira",e:"Protetor auricular",f:"2025-10-10",t:"2026-01-08"},
+{id:8,n:"Maria Oliveira",e:"Botina de segurança",f:"2025-04-05",t:"2026-04-05"},
+{id:9,n:"Carlos Pereira",e:"Capacete",f:"2025-01-20",t:"2027-01-20"},
+{id:10,n:"Carlos Pereira",e:"Óculos de proteção",f:"2025-03-12",t:"2025-09-08"},
+{id:11,n:"Carlos Pereira",e:"Botina de segurança",f:"2024-11-15",t:"2025-11-15"},
+{id:12,n:"Carlos Pereira",e:"Protetor auricular",f:"2025-06-02",t:"2025-08-31"},
+{id:13,n:"Ana Santos",e:"Máscara de solda",f:"2025-05-22",t:"2025-11-18"},
+{id:14,n:"Ana Santos",e:"Avental de couro",f:"2025-04-08",t:"2025-10-05"},
+{id:15,n:"Ana Santos",e:"Luvas de raspa",f:"2025-09-10",t:"2025-12-09"},
+{id:16,n:"Ana Santos",e:"Protetor auricular",f:"2025-10-05",t:"2026-01-03"},
+{id:17,n:"Pedro Costa",e:"Óculos de proteção",f:"2025-08-14",t:"2026-02-10"},
+{id:18,n:"Pedro Costa",e:"Luvas de segurança",f:"2025-09-30",t:"2025-12-29"},
+{id:19,n:"Pedro Costa",e:"Protetor auricular",f:"2025-07-10",t:"2025-10-08"},
+{id:20,n:"Pedro Costa",e:"Botina de segurança",f:"2025-02-22",t:"2026-02-21"},
+{id:21,n:"Fernanda Lima",e:"Capacete",f:"2024-12-01",t:"2026-11-30"},
+{id:22,n:"Fernanda Lima",e:"Botina de segurança",f:"2025-04-12",t:"2026-04-12"},
+{id:23,n:"Fernanda Lima",e:"Luvas de segurança",f:"2025-06-08",t:"2025-09-06"},
+{id:24,n:"Fernanda Lima",e:"Óculos de proteção",f:"2025-03-10",t:"2025-09-06"},
+{id:25,n:"Ricardo Almeida",e:"Máscara de solda",f:"2025-07-14",t:"2026-01-10"},
+{id:26,n:"Ricardo Almeida",e:"Luvas de raspa",f:"2025-05-02",t:"2025-07-31"},
+{id:27,n:"Ricardo Almeida",e:"Avental de couro",f:"2025-10-02",t:"2026-03-31"},
+{id:28,n:"Ricardo Almeida",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
+{id:29,n:"Juliana Martins",e:"Luvas de segurança",f:"2025-09-22",t:"2025-12-21"},
+{id:30,n:"Juliana Martins",e:"Calçado fechado",f:"2024-11-10",t:"2025-11-10"},
+{id:31,n:"Lucas Ferreira",e:"Capacete",f:"2025-02-02",t:"2027-02-02"},
+{id:32,n:"Lucas Ferreira",e:"Óculos de proteção",f:"2025-08-05",t:"2026-02-01"},
+{id:33,n:"Lucas Ferreira",e:"Luvas de segurança",f:"2025-09-12",t:"2025-12-11"},
+{id:34,n:"Lucas Ferreira",e:"Botina de segurança",f:"2025-03-20",t:"2026-03-20"},
+{id:35,n:"Tatiane Rocha",e:"Calçado fechado",f:"2025-04-01",t:"2026-04-01"},
+{id:36,n:"Tatiane Rocha",e:"Luvas de segurança",f:"2025-10-12",t:"2026-01-10"},
+{id:37,n:"Marcos Nunes",e:"Luvas de segurança",f:"2025-06-10",t:"2025-09-08"},
+{id:38,n:"Bruno Teixeira",e:"Calçado fechado",f:"2025-02-01",t:"2026-02-01"},
+{id:39,n:"Rafael Souza",e:"Protetor auricular",f:"2025-09-01",t:"2025-11-30"},
+{id:40,n:"Diego Martins",e:"Óculos de proteção",f:"2025-03-02",t:"2025-08-29"}
+];
+
+function entrar(){inicio.style.display="none";mostrarFuncionarios();}
+function voltarInicio(){perfilTela.style.display="none";funcionariosTela.style.display="none";inicio.style.display="flex";}
+function voltarFuncionarios(){perfilTela.style.display="none";funcionariosTela.style.display="block";}
+
+function diasRestantes(data){
+return Math.ceil((new Date(data)-new Date())/(1000*60*60*24));
+}
+
 function status(data){
-  return new Date(data) < new Date()
-    ? '<span class="status-vencido">Vencido</span>'
-    : '<span class="status-ok">Dentro do prazo</span>';
+return diasRestantes(data)<0
+? '<span class="status-vencido">Vencido</span>'
+: '<span class="status-ok">Ativo</span>';
 }
 
 function mostrarFuncionarios(){
-  const nomesUnicos = [...new Set(dados.map(d=>d.n))];
-
-  funcionariosTela.innerHTML = `
-    <header>
-      <h2>Funcionários</h2>
-      <button class="btn-voltar" onclick="voltarInicio()">⬅ Voltar</button>
-    </header>
-    <ul class="lista-funcionarios">
-      ${nomesUnicos.map(nome=>`
-        <li onclick="abrirPerfil('${nome}')">${nome}</li>
-      `).join("")}
-    </ul>
-  `;
-
-  funcionariosTela.style.display="block";
+funcionariosTela.innerHTML=`
+<header>
+<h2>Funcionários</h2>
+<button class="btn" onclick="voltarInicio()">⬅ Voltar</button>
+</header>
+<ul class="lista">
+${funcionarios.map(f=>`
+<li onclick="abrirPerfil('${f.nome}')">
+<strong>${f.nome}</strong><br>${f.cargo}
+</li>
+`).join("")}
+</ul>`;
+funcionariosTela.style.display="block";
 }
 
 function abrirPerfil(nome){
-  funcionariosTela.style.display="none";
+funcionariosTela.style.display="none";
+const f=funcionarios.find(x=>x.nome===nome);
+const lista=dados.filter(d=>d.n===nome);
 
-  const registros = dados.filter(d=>d.n===nome);
+perfilTela.innerHTML=`
+<header>
+<h2>${f.nome}</h2>
+<button class="btn" onclick="voltarFuncionarios()">⬅ Voltar</button>
+</header>
 
-  perfilTela.innerHTML = `
-    <header>
-      <h2>${nome}</h2>
-      <button class="btn-voltar" onclick="voltarFuncionarios()">⬅ Voltar</button>
-    </header>
+<div class="card topo">
+<img src="${f.foto}">
+<div>
+<p><strong>Cargo:</strong> ${f.cargo}</p>
+<p><strong>CPF:</strong> ${f.cpf}</p>
+<p><strong>Telefone:</strong> ${f.tel}</p>
+<p><strong>Email:</strong> ${f.email}</p>
+<p><strong>Nascimento:</strong> ${f.nasc}</p>
+<p><strong>Admissão:</strong> ${f.adm}</p>
+<p><strong>Status:</strong> Ativo</p>
+</div>
+</div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>EPI</th>
-          <th>Data fornecida</th>
-          <th>Próxima troca</th>
-          <th>Situação</th>
-        </tr>
-      </thead>
-      <tbody>
-        ${registros.map(d=>`
-          <tr>
-            <td>${d.e}</td>
-            <td>${d.f}</td>
-            <td>${d.t}</td>
-            <td>${status(d.t)}</td>
-          </tr>
-        `).join("")}
-      </tbody>
-    </table>
-  `;
-
-  perfilTela.style.display="block";
+<div class="card">
+<h3>EPIs Entregues</h3>
+<table>
+<thead>
+<tr>
+<th>ID</th>
+<th>EPI</th>
+<th>Data Entrega</th>
+<th>Validade</th>
+<th>Dias Restantes</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+${lista.map(e=>`
+<tr>
+<td>${e.id}</td>
+<td>${e.e}</td>
+<td>${e.f}</td>
+<td>${e.t}</td>
+<td>${diasRestantes(e.t)}</td>
+<td>${status(e.t)}</td>
+</tr>
+`).join("")}
+</tbody>
+</table>
+</div>`;
+perfilTela.style.display="block";
 }
 </script>
 
