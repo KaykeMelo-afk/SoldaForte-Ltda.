@@ -23,6 +23,27 @@ background:var(--cinza);
 }
 
 /* ===== TELA INICIAL ===== */
+<div id="loginTela" style="display:flex; height:100vh; justify-content:center; align-items:center; flex-direction:column;">
+  <h2>Login</h2>
+  <input id="loginEmail" placeholder="Email"><br><br>
+  <input id="loginSenha" type="password" placeholder="Senha"><br><br>
+  <button onclick="login()">Entrar</button>
+  <p>Não tem conta? <span onclick="mostrarCadastro()" style="color:blue;cursor:pointer;">Cadastrar</span></p>
+</div>
+
+<div id="cadastroTela" style="display:none; height:100vh; justify-content:center; align-items:center; flex-direction:column;">
+  <h2>Cadastro</h2>
+  <input id="cadEmail" placeholder="Email"><br><br>
+  <input id="cadSenha" type="password" placeholder="Senha"><br><br>
+
+  <select id="cadTipo">
+    <option value="viewer">Observador</option>
+    <option value="admin">Gerente</option>
+  </select><br><br>
+
+  <button onclick="cadastrar()">Cadastrar</button>
+  <p onclick="voltarLogin()" style="cursor:pointer;color:blue;">Voltar</p>
+</div>
 #inicio{
 height:100vh;
 background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.6)),
@@ -143,6 +164,58 @@ color:white;
 <div id="perfil"></div>
 
 <script>
+function mostrarCadastro(){
+  document.getElementById("loginTela").style.display="none";
+  document.getElementById("cadastroTela").style.display="flex";
+}
+
+function voltarLogin(){
+  document.getElementById("cadastroTela").style.display="none";
+  document.getElementById("loginTela").style.display="flex";
+}
+
+function cadastrar(){
+  const email=document.getElementById("cadEmail").value;
+  const senha=document.getElementById("cadSenha").value;
+  const tipo=document.getElementById("cadTipo").value;
+
+  let usuarios=JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  usuarios.push({email,senha,tipo});
+  localStorage.setItem("usuarios",JSON.stringify(usuarios));
+
+  alert("Cadastrado com sucesso!");
+  voltarLogin();
+}
+
+function login(){
+  const email=document.getElementById("loginEmail").value;
+  const senha=document.getElementById("loginSenha").value;
+
+  let usuarios=JSON.parse(localStorage.getItem("usuarios")) || [];
+
+  const user=usuarios.find(u=>u.email===email && u.senha===senha);
+
+  if(!user){
+    alert("Login inválido");
+    return;
+  }
+
+  localStorage.setItem("logado",JSON.stringify(user));
+
+  document.getElementById("loginTela").style.display="none";
+  entrarSistema(user);
+}
+
+function entrarSistema(user){
+  inicio.style.display="flex";
+
+  if(user.tipo==="viewer"){
+    alert("Modo observador: acesso limitado 👀");
+  }else{
+    alert("Modo gerente: acesso total 🔧");
+  }
+}
 const inicio=document.getElementById("inicio");
 const funcionariosTela=document.getElementById("funcionarios");
 const perfilTela=document.getElementById("perfil");
