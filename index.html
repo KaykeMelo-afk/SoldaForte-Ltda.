@@ -21,7 +21,13 @@ margin:0;
 font-family:Arial, Helvetica, sans-serif;
 background:var(--cinza);
 }
-
+#loginTela, #cadastroTela{
+  display:none;
+  height:100vh;
+  justify-content:center;
+  align-items:center;
+  flex-direction:column;
+}
 /* ===== TELA INICIAL ===== */
 <div id="loginTela" style="display:flex; height:100vh; justify-content:center; align-items:center; flex-direction:column;">
   <h2>Login</h2>
@@ -164,6 +170,12 @@ color:white;
 <div id="perfil"></div>
 
 <script>
+ window.onload = function(){
+  inicio.style.display = "none";
+  funcionariosTela.style.display = "none";
+  perfilTela.style.display = "none";
+  document.getElementById("loginTela").style.display = "flex";
+};
 function mostrarCadastro(){
   document.getElementById("loginTela").style.display="none";
   document.getElementById("cadastroTela").style.display="flex";
@@ -208,18 +220,15 @@ function login(){
 }
 
 function entrarSistema(user){
-  inicio.style.display="flex";
+  document.getElementById("loginTela").style.display="none";
+  document.getElementById("inicio").style.display="flex";
 
   if(user.tipo==="viewer"){
-    alert("Modo observador: acesso limitado 👀");
+    console.log("Observador");
   }else{
-    alert("Modo gerente: acesso total 🔧");
+    console.log("Gerente");
   }
 }
-const inicio=document.getElementById("inicio");
-const funcionariosTela=document.getElementById("funcionarios");
-const perfilTela=document.getElementById("perfil");
-
 /* ===== FUNCIONÁRIOS COMPLETOS ===== */
 const funcionarios=[
 {nome:"João Silva",cargo:"Soldador",cpf:"123.456.789-00",tel:"(31)98888-1111",email:"joao@soldaforte.com",adm:"2022-03-15",nasc:"1990-05-10",foto:"https://randomuser.me/api/portraits/men/1.jpg"},
@@ -283,7 +292,10 @@ const dados = [
 ];
 
 /* ===== FUNÇÕES ===== */
-function entrar(){inicio.style.display="none";mostrarFuncionarios();}
+function entrar(){
+  inicio.style.display="none";
+  mostrarFuncionarios();
+}
 function voltarInicio(){perfilTela.style.display="none";funcionariosTela.style.display="none";inicio.style.display="flex";}
 function voltarFuncionarios(){perfilTela.style.display="none";funcionariosTela.style.display="block";}
 
